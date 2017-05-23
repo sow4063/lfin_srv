@@ -4,19 +4,11 @@ var mongoose = require('mongoose');
 // define our word model
 // module.exports allows us to pass this to other files when it is called
 var CheckPWSchema = new mongoose.Schema({
-  mobileNumber : {
-  	type : String, required: true
-  },
-
-	UUID : {
+  cellID : {
 		type : String, required: true
 	},
 
-	cellID : {
-		type : String, required: true
-	},
-
-	createDate : {
+	updateDate : {
 		type : String, default: ''
 	}
 
