@@ -10,27 +10,54 @@ function isExistVendor( mobileNumber ) {
   return true;
 };
 
-function checkResult( LPW ) {
-
-  // verify the LPW to the LPW PWServer.
-  unirest.get('http://localhost:8095/verify')
-    .query({'lpw': LPW})
-    .end(function(res) {
-      if( res.error ) {
-        console.log('verify error', res.error );
-        return false;
-      } else {
-        console.log('verify response', res.body );
-        if( res.body.result === 'yes' ){
-          return true;
-        }
-
-        return false;
-      }
-    });
-};
 
 module.exports = {
+
+  checkResult: function( LPW ) {
+
+    // verify the LPW to the LPW PWServer.
+    // through TCP
+    var obj = {"when": "2014-08-06T13:36:31.735Z", "type": "temperature", "reading": 23.4, "units": "C", "id": "5f18453d-1907-48bc-abd2-ab6c24bc197d" };
+    
+    var net = require('net');
+
+    var client = new net.Socket();
+    client.setEncoding('utf8');
+
+    client.connect(8100, '127.0.0.1', function() {
+      console.log('Connected');
+      client.write( JSON.stringify(obj) );
+      client.write('\n');
+    });
+
+    client.on('data', function(data) {
+      console.log('Received : ', data );
+      client.destroy(); // kill client after server's response
+    });
+
+    client.on('close', function() {
+      console.log('Connection closed');
+    });
+  
+    // By http
+    // unirest.get('http://localhost:8100/verify')
+    //   .query({'lpw': LPW})
+    //   .end(function(res) {
+    //     if( res.error ) {
+    //       console.log('verify error', res.error );
+    //       return false;
+    //     } else {
+    //       console.log('verify response', res.body );
+    //       if( res.body.result === 'yes' ){
+    //         return true;
+    //       }
+
+    //       return false;
+    //     }
+    //   });
+
+
+  },
 
 	verifyUser: function (req, res, next) {
 

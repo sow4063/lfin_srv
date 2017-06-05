@@ -47,25 +47,25 @@ module.exports = {
     console.log('updateCode');
 
     // get the code from mobile vendor.
-    var LPW = {};
+    //var LPW = {};
 
     // verify the LPW to the LPW PWServer.
-    unirest.get('http://localhost:8200/update')
-    .query({'lpw': LPW})
-    .end(function(res) {
-      if( res.error ) {
-        console.log('Error on fetching the code', res.error );
-        return false;
-      } 
-      else {
-        console.log('success getting the code from the mobile vendor', res.body );
-        if( res.body.result === 'yes' ){
-          return true;
-        }
+    // unirest.get('http://localhost:8200/update')
+    // .query({'lpw': LPW})
+    // .end(function(res) {
+    //   if( res.error ) {
+    //     console.log('Error on fetching the code', res.error );
+    //     return false;
+    //   } 
+    //   else {
+    //     console.log('success getting the code from the mobile vendor', res.body );
+    //     if( res.body.result === 'yes' ){
+    //       return true;
+    //     }
 
-        return false;
-      }
-    });
+    //     return false;
+    //   }
+    // });
   }
 
 };
