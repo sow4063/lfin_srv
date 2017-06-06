@@ -16,7 +16,7 @@ function handleConnection(conn) {
   var gateway = Gateway();
 
   conn.setEncoding('utf8');
-  
+
   conn.
     pipe(s.in).
     pipe(gateway).
@@ -34,28 +34,5 @@ function handleConnection(conn) {
 
 function onConnError(err) {  
   console.error('connection error:', err.stack);
-}
+};
 
-// function handleConnection(conn) {  
-//   var remoteAddress = conn.remoteAddress + ':' + conn.remotePort;
-//   console.log('new client connection from %s', remoteAddress);
-
-//   conn.setEncoding('utf8');
-
-//   conn.on('data', onConnData);
-//   conn.once('close', onConnClose);
-//   conn.on('error', onConnError);
-
-//   function onConnData(d) {
-//     console.log('connection data from %s: %j', remoteAddress, d);
-//     conn.write(d.toUpperCase());
-//   }
-
-//   function onConnClose() {
-//     console.log('connection from %s closed', remoteAddress);
-//   }
-
-//   function onConnError(err) {
-//     console.log('Connection %s error: %s', remoteAddress, err.message);
-//   }
-// }

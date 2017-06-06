@@ -25,8 +25,8 @@ function Gateway(options) {
 Gateway.prototype._transform = _transform;
 
 function _transform(event, encoding, callback) {  
-  if (! event.id)
-    return handleError(new Error('event doesn\'t have an `id` field'));
+  if( !event.mobileNumber )
+    return handleError(new Error('event doesn\'t have an `mobileNumber` field'));
 
   pushToQueue(event, pushed);
 
@@ -38,7 +38,7 @@ function _transform(event, encoding, callback) {
     else {
 
       reply = {
-        id: event.id,
+        id: event.mobileNumber,
         success: true
       };
 
@@ -49,7 +49,7 @@ function _transform(event, encoding, callback) {
 
   function handleError(err) {
     var reply = {
-      id: event.id,
+      id: event.mobileNumber,
       success: false,
       error: err.message
     };
@@ -61,7 +61,6 @@ function _transform(event, encoding, callback) {
 
 /// Fake push to queue
 function pushToQueue(object, callback) {  
-  //setTimeout(callback, Math.floor(Math.random() * 100));
   callback();
 };
 
