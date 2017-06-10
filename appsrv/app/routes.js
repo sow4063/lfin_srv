@@ -9,6 +9,11 @@ module.exports = function(app) {
 	//app.get('/search', userCodeController.searchCodes );
 	//app.post('/update', userCodeController.updateCodes );
 	//app.post('/remove', userCodeController.removeCodes );
+
+	// create a RSA Key for server.
+	var result = appKeyController.makeRSAKey();
+	console.log('result of makeRSAKey', result );
+
 	app.post('/RSAKey', appKeyController.insertRSAKey );
 
 	// frontend routes =========================================================

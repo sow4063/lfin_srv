@@ -1,5 +1,7 @@
 var Q = require('q');
+var NodeRSA = require('node-rsa');
 var AppKey = require('./appKeyModel.js');
+var apprsakey = '';
 
 // Promisify a few mongoose methods with the `q` promise library
 //var updateKey = Q.nbind( AppKey.update, AppKey );
@@ -52,6 +54,40 @@ function addKey( keyInf, callback ) {
 
 module.exports = {
 
+  makeRSAKey: function() {
+    
+    var key = new NodeRSA({b: 2048});
+    apprsakey = key.exportKey('pkcs8-public-pem');
+ 
+    var text = 'Hello RSA!';
+    var encrypted = key.encrypt(text, 'base64');
+    
+    // save the key to the db
+    var keyinf = {};
+
+    keyinf['key'] = apprsakey;
+    keyinf['keyType'] = 'rsa';
+    keyinf['mobileNumber'] = 'appserver';
+
+    console.log('key info = ', keyinf );    
+    
+    var decrypted = key.decrypt(encrypted, 'utf8');
+    console.log('decrypted: ', decrypted);
+
+    createKey( keyinf )
+      .then(function(result){
+        console.log('Success on create RSA key for appserver :: ', result );
+
+        // create the RSA key of server and return it to mobile.
+        return result;
+      })
+      .fail(function(err){
+        console.log('Fail on create the RSA key for appserver :: ', error );
+        return error;
+      });
+
+  },
+
   insertRSAKey: function (req, res, next) {
 
     var keyinf = {};
@@ -65,16 +101,16 @@ module.exports = {
     removeKey( keyinf )
       .then(function(result){
         createKey( keyinf )
-        .then(function(result){
-          console.log('Success on update rsakey :: ', result );
+          .then(function(result){
+            console.log('Success on update rsakey :: ', result );
 
-          // create the RSA key of server and return it.
-          res.json( result );
-        })
-        .fail(function(err){
-          console.log('Fail on update rsakey :: ', error );
-          res.json( error );
-        });
+            // create the RSA key of server and return it to mobile.
+            res.json( apprsakey );
+          })
+          .fail(function(err){
+            console.log('Fail on update rsakey :: ', error );
+            res.json( error );
+          });
       })
       .fail(function(err){
         console.log('Fail on remove rsakey');

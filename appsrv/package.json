@@ -10,6 +10,7 @@
     "method-override": "~2.0.2",
     "mocha": "^2.4.5",
     "mongoose": "~4.4",
+    "node-rsa": "^0.4.2",
     "q": "^1.4.1"
   },
   "devDependencies": {
