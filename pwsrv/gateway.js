@@ -2,6 +2,8 @@ var extend = require('util')._extend;
 var inherits = require('util').inherits;  
 var Transform = require('stream').Transform;
 
+var keyController = require('./app/pwKey/pwKeyController.js');
+
 inherits(Gateway, Transform);
 
 var defaultOptions = {  
@@ -43,6 +45,12 @@ function _transform(event, encoding, callback) {
       };
 
       console.log('pushed success callback :: ', event );
+
+      if( event.msgid === '200') {
+        // save the AES key to db
+        keyController.insertAESKey( event );
+      }
+
       callback(null, reply);
     }
   }

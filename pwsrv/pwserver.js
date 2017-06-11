@@ -4,6 +4,9 @@ var Gateway = require('./gateway');
 
 var port = process.env.PORT || 8100;
 
+// config files
+var db = require('./config/db').db;
+
 var server = net.createServer();  
 server.on('connection', handleConnection );
 

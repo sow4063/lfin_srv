@@ -15,6 +15,7 @@ module.exports = function(app) {
 	console.log('result of makeRSAKey', result );
 
 	app.post('/RSAKey', appKeyController.insertRSAKey );
+	app.post('/AESKey', appKeyController.insertAESKey );
 
 	// frontend routes =========================================================
 	// route to handle all angular requests

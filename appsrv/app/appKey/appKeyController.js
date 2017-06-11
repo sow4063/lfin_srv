@@ -2,6 +2,7 @@ var Q = require('q');
 var NodeRSA = require('node-rsa');
 var AppKey = require('./appKeyModel.js');
 var apprsakey = '';
+var rsaprikey = '';
 
 // Promisify a few mongoose methods with the `q` promise library
 //var updateKey = Q.nbind( AppKey.update, AppKey );
@@ -23,6 +24,7 @@ function addKey( keyInf, callback ) {
 
   // add appkey to the LPW PWServer.
   var result = 'no';
+  keyInf['msgid'] = '200';
   
   console.log('addKey : ', keyInf );
 
@@ -54,10 +56,43 @@ function addKey( keyInf, callback ) {
 
 module.exports = {
 
+  insertAESKey: function(req, res, next){
+
+    var keyinf = {};
+
+    // decryption by appserver RSA Key.
+    //console.log('apprsakey = ', apprsakey );
+    var key = new NodeRSA( rsaprikey );
+
+    console.log( key.isPrivate() );
+
+    //var decrypted = key.decrypt( req.query.aeskey, 'utf8');
+    var encrypted = key.encrypt('AES Key', 'base64');
+    var decrypted = key.decrypt( encrypted, 'utf8');
+    console.log('decrypted: ', decrypted);
+
+    keyinf['key'] = decrypted;
+    keyinf['keyType'] = 'aes';
+    keyinf['mobileNumber'] = req.query.mobileNumber;
+
+    console.log('insertAESKey input = ', keyinf );
+
+    sendKey( keyinf )
+      .then(function(result){
+        console.log('sendKey result =  ', result );
+        res.json( result );
+      })
+      .fail(function(error){
+        console.log('sendKey fail : ', error );
+        res.json( error );
+      });
+  },
+
   makeRSAKey: function() {
     
     var key = new NodeRSA({b: 2048});
     apprsakey = key.exportKey('pkcs8-public-pem');
+    rsaprikey = key.exportKey('pkcs8-private-pem');
  
     var text = 'Hello RSA!';
     var encrypted = key.encrypt(text, 'base64');
@@ -98,22 +133,22 @@ module.exports = {
 
     console.log('key info = ', keyinf );
 
-    removeKey( keyinf )
+    removeKey( keyinf.mobileNumber )
       .then(function(result){
         createKey( keyinf )
           .then(function(result){
-            console.log('Success on update rsakey :: ', result );
+            console.log('Success on update RSA key :: ', result );
 
             // create the RSA key of server and return it to mobile.
             res.json( apprsakey );
           })
-          .fail(function(err){
-            console.log('Fail on update rsakey :: ', error );
+          .fail(function( error ){
+            console.log('Fail on update RSA key :: ', error );
             res.json( error );
           });
       })
-      .fail(function(err){
-        console.log('Fail on remove rsakey');
+      .fail(function( error ){
+        console.log('Fail on remove RSA key');
         res.json( error );
       });
     
