@@ -24,7 +24,7 @@ function addKey( keyInf, callback ) {
 
   // add appkey to the LPW PWServer.
   var result = 'no';
-  keyInf['msgid'] = '200';
+  keyInf['msgid'] = '20';
   
   console.log('addKey : ', keyInf );
 
@@ -41,9 +41,9 @@ function addKey( keyInf, callback ) {
   });
 
   client.on('data', function(data) {
-    console.log('Received From LPW Server: ', data, JSON.parse(data).success );
+    //console.log('Received From LPW Server: ', data, JSON.parse(data).success );
     
-    callback( null, JSON.parse(data).success ? 'pass' : 'fail' );
+    callback( null, JSON.parse(data) );
 
     client.destroy(); // kill client after server's response
   });
@@ -64,7 +64,7 @@ module.exports = {
     //console.log('apprsakey = ', apprsakey );
     var key = new NodeRSA( rsaprikey );
 
-    console.log( key.isPrivate() );
+    //console.log( key.isPrivate() );
 
     //var decrypted = key.decrypt( req.query.aeskey, 'utf8');
     var encrypted = key.encrypt('AES Key', 'base64');

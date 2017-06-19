@@ -2,7 +2,19 @@ var extend = require('util')._extend;
 var inherits = require('util').inherits;  
 var Transform = require('stream').Transform;
 
+var Q = require('q');
+
 var keyController = require('./app/pwKey/pwKeyController.js');
+var codeController = require('./app/code/codeController.js');
+
+var checkPW = function(event){
+  var deferred = Q.defer();
+  keyController.confirmPW( event, function(error, result) {
+    if (error) deferred.reject(new Error(error));
+    else deferred.resolve(result);
+  });
+  return deferred.promise;
+};
 
 inherits(Gateway, Transform);
 
@@ -22,7 +34,6 @@ function Gateway(options) {
   Transform.call(this, options);
 }
 
-
 /// _transform
 Gateway.prototype._transform = _transform;
 
@@ -30,36 +41,50 @@ function _transform(event, encoding, callback) {
   if( !event.mobileNumber )
     return handleError(new Error('event doesn\'t have an `mobileNumber` field'));
 
-  pushToQueue(event, pushed);
+  pushToQueue( event, pushed );
 
   function pushed(err) {
-    if (err) {
+    if( err ) {
       console.log('pushed err');
       handleError(err);
     }
     else {
 
       reply = {
-        id: event.mobileNumber,
-        success: true
+        code: '-1',
+        msg: ''
       };
 
       console.log('pushed success callback :: ', event );
 
-      if( event.msgid === '200') {
+      if( event.msgid === '10' ) {
+        checkPW( event )
+          .then(function(result){
+            reply.code = result.code;
+            reply.msg = result.msg;
+            console.log('result[OK] = ', reply );
+            callback(null, reply);
+          })
+          .fail(function(err){
+            reply.code = err.code;
+            reply.msg = err;
+            console.log('result[ERR] = ', reply );
+            callback(err, reply);
+          });
+      }
+      else if( event.msgid === '20' ) {
         // save the AES key to db
         keyController.insertAESKey( event );
+        callback( null, reply );
       }
-
-      callback(null, reply);
+      
     }
   }
 
   function handleError(err) {
     var reply = {
-      id: event.mobileNumber,
-      success: false,
-      error: err.message
+      code: '100',
+      msg: err.message
     };
 
     callback(null, reply);

@@ -12,6 +12,10 @@ var PWKeySchema = new mongoose.Schema({
 		type : String, default: ''
 	},
 
+	keyType : {
+		type : String, default: ''
+	},
+
 	updateDate : {
 		type : String, default: ''
 	}

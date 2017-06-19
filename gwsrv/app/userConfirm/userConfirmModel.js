@@ -13,7 +13,7 @@ var UserConfirmSchema = new mongoose.Schema({
 	},
 
 	createDate : {
-		type : String, default: ''
+		type : String, required: true
 	},
 
   verifyResult : {

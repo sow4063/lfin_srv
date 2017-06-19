@@ -10,33 +10,20 @@ function isExistVendor( mobileNumber ) {
   return true;
 };
 
-// var confirmPW = function(mobileNumber, lpw){
-//   return Q.Promise( function(resolve, reject, notify ) {
-//     checkPW(mobileNumber, lpw, function(error, buffer) {
-//       console.log(error, buffer);
-//       if (error) reject(error);
-//       else resolve(buffer);
-//     });
-//   });
-// };
-
-var confirmPW = function(mobileNumber, lpw){
+var confirmPW = function(keyInf){
   var deferred = Q.defer();
-  checkPW( mobileNumber, lpw, function(error, result) {
+  checkPW( keyInf, function(error, result) {
     if (error) deferred.reject(new Error(error));
     else deferred.resolve(result);
   });
   return deferred.promise;
 };
 
-function checkPW( mobileNumber, LPW, callback ) {
+function checkPW( keyInf, callback ) {
 
   // verify the LPW to the LPW PWServer.
   // through TCP
-  var result = 'no';
-  var obj = {};
-  obj['mobileNumber'] = mobileNumber;
-  obj['LPW'] = LPW;
+  keyInf['msgid'] = '10';
 
   var net = require('net');
 
@@ -46,14 +33,13 @@ function checkPW( mobileNumber, LPW, callback ) {
 
   client.connect(8100, '127.0.0.1', function() {
     console.log('Connected');
-    client.write( JSON.stringify(obj) );
+    client.write( JSON.stringify(keyInf) );
     client.write('\n');
   });
 
   client.on('data', function(data) {
-    console.log('Received From LPW Server: ', data, JSON.parse(data).success );
-    
-    callback( null, JSON.parse(data).success ? 'pass' : 'fail' );
+    //console.log('Received From LPW Server: ', data );
+    callback( null, JSON.parse(data) );
 
     client.destroy(); // kill client after server's response
   });
@@ -73,13 +59,20 @@ module.exports = {
     var mobileNumber = req.query.mobileNumber;
     var CID = req.query.CID;
     var LPW = req.query.LPW;
-    var cellID = req.query.cellID;
+    var uuid = req.query.UUID;
 
-    console.log('verifyUser:: ', mobileNumber, CID, LPW, cellID );
+    console.log('verifyUser:: ', mobileNumber, CID, LPW, uuid );
+
+    var ret = {
+      code: 0,
+      msg: '인증 암호 검증에 성공했습니다.'
+    };
     
     if( !isExistVendor( mobileNumber ) ) {
       console.log('no vendor is exist for the mobile number. ', mobileNumber );
-      res.json( 'novendor' );
+      ret.code = 800;
+      ret.msg = '통신 사업자가 존재하지 않습니다.';
+      res.json( ret );
     }
     else {
       // ask verification to the L-PW PW server
@@ -94,28 +87,38 @@ module.exports = {
       var current = jsonDate + localtime;
 
       userConfirm['createDate'] = current;
+
+      var keyInf = {};
+      keyInf['mobileNumber'] = mobileNumber;
+      keyInf['lpw'] = LPW;
+      keyInf['uuid'] = uuid;
       
-      confirmPW( mobileNumber, LPW )
+      confirmPW( keyInf )
         .then(function(buffer){
-          userConfirm['verifyResult'] = buffer === 'pass' ? true : false;
+          console.log('confirmPW result = ', buffer );
+          ret.code = buffer.code;
+          ret.msg = buffer.msg;
+
+          userConfirm['verifyResult'] = buffer.code === '0' ? true : false;
 
           console.log('userConfirm ', userConfirm );
 
-          //updateUserConfirm( userConfirm, { upsert: true }  )
           insertUserConfirm( userConfirm )
             .then(function(result){
               console.log('the userConfirm created successfully.', result );
             })
-            .fail(function(err){
-              console.log('create userConfirm Error.', err );
+            .fail(function(error){
+              console.log('create userConfirm Error.', error );
             }); 
 
-          res.json( buffer );
+          res.json( ret );
           
         })
         .fail(function(error){
           console.log('confirmPW fail : ', error );
-          res.json(error);
+          ret.code = 100;
+          ret.msg = error;
+          res.json( ret );
         });
 
     } // exist movile newtwork operator

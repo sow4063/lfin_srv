@@ -1,0 +1,57 @@
+var Q = require('q');
+var Code = require('./codeModel.js');
+var randomstring = require("randomstring");
+var crypto = require("crypto");
+
+// Promisify a few mongoose methods with the `q` promise library
+var updateCode = Q.nbind( Code.update, Code );
+var findCode = Q.nbind( Code.findOne, Code );
+
+function makeCode(bsid) {
+  // generate 120 bytes according to bsid
+  var len = 120 - ('' + bsid ).length;
+
+  priCode = randomstring.generate({
+    length: len,
+    charset: 'alphanumeric'
+  });
+
+  priCode += bsid;
+  
+  console.log( 'priCode = ', priCode );
+  
+  // create the hash value with SHA256
+  let hash = crypto.createHash('sha512').update(priCode, 'utf8').digest('base64').substring(0,60);
+  let code = priCode + hash;
+  
+  console.log('hash = ', hash.length );
+  console.log('code = ', code.length );
+  console.log('code = ', code );
+
+  return code;
+};
+
+module.exports = {
+
+	searchCode: function( mobileNumber, callback ) {
+    var code = '';
+    
+    Code.findOne({ 'mobileNumber': mobileNumber }, function (err, result) {
+      if( err ) 
+        callback(err);
+      
+      //code = makeCode( result.bsid );
+      code = result.code;
+      
+      console.log('Code.findOne bsid, code is = ', result.bsid, code );
+      
+      callback(null, code);
+    });
+
+  },
+
+  updateCode: function() {
+    console.log('updateCode');
+  }
+
+};

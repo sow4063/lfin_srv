@@ -3,8 +3,16 @@ var mongoose = require('mongoose');
 
 // define our word model
 // module.exports allows us to pass this to other files when it is called
-var CheckPWSchema = new mongoose.Schema({
-  cellID : {
+var CodeSchema = new mongoose.Schema({
+	mobileNumber : {
+		type : String, required: true
+	},
+	
+  bsid : {
+		type : String, required: true
+	},
+
+	code : {
 		type : String, required: true
 	},
 
@@ -14,4 +22,4 @@ var CheckPWSchema = new mongoose.Schema({
 
 });
 
-module.exports = mongoose.model( 'checkPW', CheckPWSchema );
+module.exports = mongoose.model( 'code', CodeSchema );
