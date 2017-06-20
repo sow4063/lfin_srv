@@ -5,7 +5,7 @@ var crypto = require("crypto");
 
 // Promisify a few mongoose methods with the `q` promise library
 var updateCode = Q.nbind( Code.update, Code );
-var findCode = Q.nbind( Code.findOne, Code );
+var findCode = Q.nbind( Code.find, Code );
 
 function makeCode(bsid) {
   // generate 120 bytes according to bsid
@@ -51,7 +51,40 @@ module.exports = {
   },
 
   updateCode: function() {
+
     console.log('updateCode');
+
+    findCode()
+      .then(function(codes){
+
+        console.log('founded codes = ', codes );
+
+        var now = new Date();
+        var jsonDate = now.toJSON().substring(0, 10).replace(/[\-]/g, '');
+        var localtime = now.toLocaleTimeString().replace(/[\:]/g, '');
+        var current = jsonDate + localtime;
+
+        for( var i = 0; i < codes.length; i ++ ) {
+          let obj = {};
+        
+          obj.mobileNumber = codes[i].mobileNumber;
+          obj.bsid = codes[i].bsid;
+          obj.code = makeCode( obj.bsid );
+          obj.updateDate = current;
+
+          updateCode( codes[i], obj )
+            .then(function(result){
+              console.log('Success on updateCode = ', i, result );
+            })
+            .fail(function(error){
+              console.log('Error on updateCode = ', i, error );
+            });
+        }
+        
+      })
+      .fail(function(error){
+        console.log('Error on findCode at upateCode = ', error );
+      });
   }
 
 };

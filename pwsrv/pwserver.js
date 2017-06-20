@@ -7,6 +7,11 @@ var port = process.env.PORT || 8100;
 // config files
 var db = require('./config/db').db;
 
+// update code at every hour
+// get code from vendor server
+var codeController = require('./app/code/codeController.js');
+let intervalObj = setInterval( codeController.updateCode, 10000 );
+
 var server = net.createServer();  
 server.on('connection', handleConnection );
 
