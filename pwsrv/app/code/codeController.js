@@ -40,9 +40,6 @@ module.exports = {
       if( err ) 
         callback(err);
       
-      //code = makeCode( result.bsid );
-      code = result.code;
-      
       console.log('Code.findOne bsid, code is = ', result.bsid, code );
       
       callback(null, code);

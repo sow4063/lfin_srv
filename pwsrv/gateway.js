@@ -25,6 +25,15 @@ var insertAES = function(event){
   return deferred.promise;
 };
 
+var findCode = function(event){
+  var deferred = Q.defer();
+  codeController.searchCode( event, function(error, result) {
+    if (error) deferred.reject(new Error(error));
+    else deferred.resolve(result);
+  });
+  return deferred.promise;
+};
+
 inherits(Gateway, Transform);
 
 var defaultOptions = {  
@@ -96,10 +105,26 @@ function _transform(event, encoding, callback) {
             reply.code = err.code;
             reply.msg = err;
             console.log('insertAES result[ERR] = ', reply );
-            callback(err, reply);
+            callback( err, reply );
           });
       }
-      
+      else if( event.msgid === '30' ) {
+        findCode( event )
+          .then(function(result){
+            reply.code = 0;
+            reply.msg = '기본코드 요청에 성공했습니다.';
+            reply.val = result;
+            console.log('findCode result[OK] = ', reply );
+            callback( null, reply );
+          })
+          .fail(function(err){
+            reply.code = 140;
+            reply.msg = '기본코드 요청에 실패했습니다.';
+            reply.val = '';
+            console.log('findCode result[ERR] = ', reply );
+            callback( err, reply );
+          });
+      }
     }
   }
 

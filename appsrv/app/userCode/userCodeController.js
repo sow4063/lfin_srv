@@ -7,7 +7,74 @@ var findUserCodes = Q.nbind(UserCode.find, UserCode);
 var updateUserCode = Q.nbind(UserCode.update, UserCode);
 var removeUserCodes = Q.nbind(UserCode.remove, UserCode);
 
+var askCode = function( mobileNumber ) {
+  var deferred = Q.defer();
+
+  requestCode( mobileNumber, function(error, result) {
+    if (error) deferred.reject(new Error(error));
+    else deferred.resolve(result);
+  });
+  
+  return deferred.promise;
+};
+
+var tls = require('tls');
+var fs = require('fs');
+
+var options = {  
+  key: fs.readFileSync('../cert/key.pem'),
+  cert: fs.readFileSync('../cert/cert.pem')
+};
+
+function requesetCode( mobileNumber, callback ) {
+
+  // add appkey to the LPW PWServer.
+  var obj = {};
+  obj['msgid'] = '30';
+  obj['mobileNumber'] = mobileNumber;
+  
+  console.log('requesetCode obj = ', obj );
+
+  var client = tls.connect(8100, options, function () {
+    console.log( client.authorized ? 'Authorized' : 'Not authorized' );
+    client.write( JSON.stringify( obj ) );
+    client.write('\n');
+  });
+
+  client.setEncoding('utf8');
+
+  client.on('data', function( data ) {
+    callback( null, JSON.parse( data ) );
+    client.destroy(); // kill client after server's response
+  });
+
+  client.on('close', function() {
+    console.log('Connection closed!!');
+  });
+
+};
+
 module.exports = {
+
+  getCode: function(req, res, next) {
+
+    var mobileNumber = req.query.mobileNumber;
+
+    console.log('getCode mobileNumber = ', mobileNumber );
+
+    askCode( mobileNumber )
+      .then(function(buffer){
+        console.log('askCode result = ', buffer );
+        res.json( buffer );
+        
+      })
+      .fail(function(error){
+        console.log('askCode fail : ', error );
+        ret.code = 100;
+        ret.msg = error;
+        res.json( ret );
+      });
+  },
 
 	searchCodes: function(req, res, next){
 
