@@ -26,7 +26,7 @@ var options = {
   cert: fs.readFileSync('../cert/cert.pem')
 };
 
-function requesetCode( mobileNumber, callback ) {
+function requestCode( mobileNumber, callback ) {
 
   // add appkey to the LPW PWServer.
   var obj = {};

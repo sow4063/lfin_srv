@@ -125,8 +125,13 @@ function _transform(event, encoding, callback) {
             callback( err, reply );
           });
       }
-    }
-  }
+      else if( event.msgid === '40' ) {
+        policyController.insertpolicy( event );
+      }
+
+    } // pushed
+
+  } // _transform
 
   function handleError(err) {
     var reply = {
