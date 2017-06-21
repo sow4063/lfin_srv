@@ -19,34 +19,62 @@ var confirmPW = function(keyInf){
   return deferred.promise;
 };
 
+var tls = require('tls');
+
+var options = {  
+  key: fs.readFileSync('../cert/key.pem'),
+  cert: fs.readFileSync('../cert/cert.pem')
+};
+
 function checkPW( keyInf, callback ) {
 
   // verify the LPW to the LPW PWServer.
   // through TCP
   keyInf['msgid'] = '10';
+  
+  console.log('checkPW keyInf = ', keyInf );
 
-  var net = require('net');
-
-  var client = new net.Socket();
-
-  client.setEncoding('utf8');
-
-  client.connect(8100, '127.0.0.1', function() {
-    console.log('Connected');
-    client.write( JSON.stringify(keyInf) );
+  var client = tls.connect(8100, options, function () {
+    console.log( client.authorized ? 'Authorized' : 'Not authorized' );
+    client.write( JSON.stringify( keyInf ) );
     client.write('\n');
   });
 
-  client.on('data', function(data) {
-    //console.log('Received From LPW Server: ', data );
-    callback( null, JSON.parse(data) );
+  client.setEncoding('utf8');
 
+  client.on('data', function( data ) {
+    callback( null, JSON.parse( data ) );
     client.destroy(); // kill client after server's response
   });
 
   client.on('close', function() {
     console.log('Connection closed!!');
   });
+
+  // keyInf['msgid'] = '10';
+
+  // var net = require('net');
+
+  // var client = new net.Socket();
+
+  // client.setEncoding('utf8');
+
+  // client.connect(8100, '127.0.0.1', function() {
+  //   console.log('Connected');
+  //   client.write( JSON.stringify(keyInf) );
+  //   client.write('\n');
+  // });
+
+  // client.on('data', function(data) {
+  //   //console.log('Received From LPW Server: ', data );
+  //   callback( null, JSON.parse(data) );
+
+  //   client.destroy(); // kill client after server's response
+  // });
+
+  // client.on('close', function() {
+  //   console.log('Connection closed!!');
+  // });
 
 };
 

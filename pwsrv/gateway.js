@@ -16,6 +16,15 @@ var checkPW = function(event){
   return deferred.promise;
 };
 
+var insertAES = function(event){
+  var deferred = Q.defer();
+  keyController.insertAESKey( event, function(error, result) {
+    if (error) deferred.reject(new Error(error));
+    else deferred.resolve(result);
+  });
+  return deferred.promise;
+};
+
 inherits(Gateway, Transform);
 
 var defaultOptions = {  
@@ -62,20 +71,33 @@ function _transform(event, encoding, callback) {
           .then(function(result){
             reply.code = result.code;
             reply.msg = result.msg;
-            console.log('result[OK] = ', reply );
+            console.log('checkPW result[OK] = ', reply );
             callback(null, reply);
           })
           .fail(function(err){
             reply.code = err.code;
             reply.msg = err;
-            console.log('result[ERR] = ', reply );
+            console.log('checkPW result[ERR] = ', reply );
             callback(err, reply);
           });
       }
       else if( event.msgid === '20' ) {
         // save the AES key to db
-        keyController.insertAESKey( event );
-        callback( null, reply );
+        //keyController.insertAESKey( event );
+        //callback( null, reply );
+        insertAES( event )
+          .then(function(result){
+            reply.code = result.code;
+            reply.msg = result.msg;
+            console.log('insertAES result[OK] = ', reply );
+            callback(null, reply);
+          })
+          .fail(function(err){
+            reply.code = err.code;
+            reply.msg = err;
+            console.log('insertAES result[ERR] = ', reply );
+            callback(err, reply);
+          });
       }
       
     }

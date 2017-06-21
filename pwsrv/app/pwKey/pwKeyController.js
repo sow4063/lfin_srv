@@ -87,7 +87,7 @@ module.exports = {
       });
   },
 
-  insertAESKey: function (event) {
+  insertAESKey: function (event, callback) {
 
     var keyinf = {};
 
@@ -104,21 +104,32 @@ module.exports = {
 
     console.log('insertAESKey keyinf = ', keyinf );
 
+    var res = {
+      'code': 'default',
+      'msg': 'default'
+    };
+
     removeKey( keyinf.mobileNumber )
       .then(function( result ){
         createKey( keyinf )
           .then(function( result ){
             console.log('Success on update AES key :: ', result );
-            return result;
+            res.code = '0';
+            res.msg = 'AES키 등록에 성공했습니다.';
+            callback( null, res );
           })
           .fail(function( error ){
             console.log('Fail on update AES key :: ', error );
-            return error;
+            res.code = '120';
+            res.msg = 'AES키 등록에 실패했습니다.';
+            callback( error, res );
           });
       })
       .fail(function( error ){
         console.log('Fail on remove AES key', error );
-        return error;
+        res.code = '520';
+        res.msg = 'DB 추가시 오류가 발생했습니다.';
+        callback( error, res );
       });
     
   }

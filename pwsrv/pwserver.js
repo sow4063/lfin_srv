@@ -10,14 +10,32 @@ var db = require('./config/db').db;
 // update code at every hour
 // get code from vendor server
 var codeController = require('./app/code/codeController.js');
-let intervalObj = setInterval( codeController.updateCode, 10000 );
+let intervalObj = setInterval( codeController.updateCode, 1000 * 3600 );
 
-var server = net.createServer();  
+var tls = require('tls');
+var fs = require('fs');
+
+var options = {  
+  key: fs.readFileSync('../cert/key.pem'),
+  cert: fs.readFileSync('../cert/cert.pem')
+};
+
+var server = tls.createServer(options, function (res) {
+});
+
 server.on('connection', handleConnection );
 
-server.listen(port, function() {  
-  console.log('server listening to %j', server.address());
-});
+server.listen( port, function(){
+  console.log('server listening to %j', server.address() );
+}); 
+
+//
+// var server = net.createServer();  
+// server.on('connection', handleConnection );
+
+// server.listen(port, function() {  
+//   console.log('server listening to %j', server.address());
+// });
 
 function handleConnection(conn) {  
   var s = JSONDuplexStream();
@@ -31,16 +49,16 @@ function handleConnection(conn) {
     pipe(s.out).
     pipe(conn);
 
-  s.in.on('error', onProtocolError);
-  s.out.on('error', onProtocolError);
-  conn.on('error', onConnError);
+  s.in.on('error', onProtocolError ) ;
+  s.out.on('error', onProtocolError );
+  conn.on('error', onConnError );
 
   function onProtocolError(err) {
-    conn.end('protocol error:' + err.message);
+    conn.end('protocol error:' + err.message );
   }
 }
 
 function onConnError(err) {  
-  console.error('connection error:', err.stack);
+  console.error('connection error:', err.stack );
 };
 
