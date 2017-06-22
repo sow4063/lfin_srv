@@ -23,15 +23,14 @@ var sendKey = function( keyInf ) {
 var tls = require('tls');
 var fs = require('fs');
 
-// var options = {  
-//   key: fs.readFileSync('../cert/key.pem'),
-//   cert: fs.readFileSync('../cert/cert.pem')
-// };
+var server = process.env.HOST || '128.199.172.16';
+var port = process.env.PORT || 8100;
+
 var sslPath = '/etc/letsencrypt/live/www.fordicpro.com/';
 
 var options = {  
-    key: fs.readFileSync(sslPath + 'privkey.pem'),
-    cert: fs.readFileSync(sslPath + 'fullchain.pem')
+  key: fs.readFileSync(sslPath + 'privkey.pem'),
+  cert: fs.readFileSync(sslPath + 'fullchain.pem')
 };
 
 function addKey( keyInf, callback ) {
@@ -41,7 +40,7 @@ function addKey( keyInf, callback ) {
   
   console.log('addKey keyInf = ', keyInf );
 
-  var client = tls.connect(8100, options, function () {
+  var client = tls.connect( port, server, options, function () {
     console.log( client.authorized ? 'Authorized' : 'Not authorized' );
     client.write( JSON.stringify( keyInf ) );
     client.write('\n');
@@ -57,28 +56,6 @@ function addKey( keyInf, callback ) {
   client.on('close', function() {
     console.log('Connection closed!!');
   });
-
-  
-  // var net = require('net');
-
-  // var client = new net.Socket();
-
-  // client.setEncoding('utf8');
-
-  // client.connect(8100, '127.0.0.1', function() {
-  //   console.log('Connected');
-  //   client.write( JSON.stringify(keyInf) );
-  //   client.write('\n');
-  // });
-
-  // client.on('data', function(data) {
-  //   callback( null, JSON.parse(data) );
-  //   client.destroy(); // kill client after server's response
-  // });
-
-  // client.on('close', function() {
-  //   console.log('Connection closed!!');
-  // });
 
 };
 

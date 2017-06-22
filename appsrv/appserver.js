@@ -8,21 +8,18 @@ var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
 
 // configuration ===========================================
-// var options = {  
-//   key: fs.readFileSync('../cert/key.pem'),
-//   cert: fs.readFileSync('../cert/cert.pem')
-// };
 var sslPath = '/etc/letsencrypt/live/www.fordicpro.com/';
 
 var options = {  
-    key: fs.readFileSync(sslPath + 'privkey.pem'),
-    cert: fs.readFileSync(sslPath + 'fullchain.pem')
+  key: fs.readFileSync(sslPath + 'privkey.pem'),
+  cert: fs.readFileSync(sslPath + 'fullchain.pem')
 };
 	
 // config files
 var db = require('./config/db').db;
 
 var port = process.env.PORT || 8200; // set our port
+var host = process.env.HOST || '128.199.172.16';
 
 // get all data/stuff of the body (POST) parameters
 app.use(bodyParser.json()); // parse application/json 
@@ -36,7 +33,7 @@ app.use(express.static(__dirname + '/public')); // set the static files location
 require('./app/routes')(app); // pass our application into our routes
 
 // start app ===============================================
-https.createServer(options, app).listen( port, 'localhost', null, function() {
+https.createServer(options, app).listen( port, host, null, function() {
   console.log('Server listening on port %d in %s mode', this.address().port, app.settings.env );
 });
 

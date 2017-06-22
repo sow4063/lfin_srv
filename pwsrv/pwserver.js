@@ -15,10 +15,6 @@ var intervalObj = setInterval( codeController.updateCode, 1000 * 3600 );
 var tls = require('tls');
 var fs = require('fs');
 
-// var options = {  
-//   key: fs.readFileSync('../cert/key.pem'),
-//   cert: fs.readFileSync('../cert/cert.pem')
-// };
 var sslPath = '/etc/letsencrypt/live/www.fordicpro.com/';
 
 var options = {  
@@ -26,7 +22,7 @@ var options = {
     cert: fs.readFileSync(sslPath + 'fullchain.pem')
 };
 
-var server = tls.createServer(options, function (res) {
+var server = tls.createServer( options, function (res) {
 });
 
 server.on('connection', handleConnection );
@@ -34,14 +30,6 @@ server.on('connection', handleConnection );
 server.listen( port, function(){
   console.log('server listening to %j', server.address() );
 }); 
-
-//
-// var server = net.createServer();  
-// server.on('connection', handleConnection );
-
-// server.listen(port, function() {  
-//   console.log('server listening to %j', server.address());
-// });
 
 function handleConnection(conn) {  
   var s = JSONDuplexStream();

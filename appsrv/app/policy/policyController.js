@@ -20,15 +20,14 @@ var sendPolicy = function( policy ) {
 var tls = require('tls');
 var fs = require('fs');
 
-// var options = {  
-//   key: fs.readFileSync('../cert/key.pem'),
-//   cert: fs.readFileSync('../cert/cert.pem')
-// };
+var server = process.env.HOST || '128.199.172.16';
+var port = process.env.PORT || 8100;
+
 var sslPath = '/etc/letsencrypt/live/www.fordicpro.com/';
 
 var options = {  
-    key: fs.readFileSync(sslPath + 'privkey.pem'),
-    cert: fs.readFileSync(sslPath + 'fullchain.pem')
+  key: fs.readFileSync(sslPath + 'privkey.pem'),
+  cert: fs.readFileSync(sslPath + 'fullchain.pem')
 };
 
 function updatePolicy( policy, callback ) {
@@ -38,7 +37,7 @@ function updatePolicy( policy, callback ) {
   
   console.log('updatePolicy keyInf = ', policy );
 
-  var client = tls.connect(8100, options, function () {
+  var client = tls.connect( port, server, options, function () {
     console.log( client.authorized ? 'Authorized' : 'Not authorized' );
     client.write( JSON.stringify( keyInf ) );
     client.write('\n');
