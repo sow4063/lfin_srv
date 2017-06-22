@@ -20,7 +20,7 @@ var sslPath = '/etc/letsencrypt/live/www.fordicpro.com/';
 var options = {  
   key: fs.readFileSync( sslPath + 'privkey.pem' ),
   cert: fs.readFileSync( sslPath + 'fullchain.pem' ),
-  ca: fs.readFileSync( sslPath + 'fullchain.pem' )
+  //ca: fs.readFileSync( sslPath + 'fullchain.pem' )
 };
 
 var server = tls.createServer( options, function (res) {
