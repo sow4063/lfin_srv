@@ -21,7 +21,7 @@ var confirmPW = function(keyInf){
 
 var tls = require('tls');
 
-var server = process.env.HOST || '128.199.172.16';
+var server = process.env.HOST || 'www.fordicpro.com' || '128.199.172.16';
 var port = process.env.PORT || 8100;
 
 var sslPath = '/etc/letsencrypt/live/www.fordicpro.com/';
