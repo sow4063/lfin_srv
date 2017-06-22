@@ -59,6 +59,9 @@ function Gateway(options) {
 Gateway.prototype._transform = _transform;
 
 function _transform(event, encoding, callback) {  
+
+  console.log('_transform event = ', event );
+
   if( !event.mobileNumber )
     return handleError(new Error('event doesn\'t have an `mobileNumber` field'));
 
