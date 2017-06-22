@@ -29,16 +29,16 @@ var options = {
 const server = tls.createServer(options, (socket) => {
   console.log('server connected',
               socket.authorized ? 'authorized' : 'unauthorized');
-  socket.write('welcome!\n');
-  socket.setEncoding('utf8');
-  socket.pipe(socket);
+  //socket.write('welcome!\n');
+  //socket.setEncoding('utf8');
+  //socket.pipe(socket);
 });
 
-server.listen( port, function(){
+server.on('connection', handleConnection );
+
+server.listen( port, function() {
   console.log('server listening to %j', server.address() );
 }); 
-
-server.on('connection', handleConnection );
 
 function handleConnection(conn) {  
 
