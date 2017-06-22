@@ -10,7 +10,7 @@ var db = require('./config/db').db;
 // update code at every hour
 // get code from vendor server
 var codeController = require('./app/code/codeController.js');
-let intervalObj = setInterval( codeController.updateCode, 1000 * 3600 );
+var intervalObj = setInterval( codeController.updateCode, 1000 * 3600 );
 
 var tls = require('tls');
 var fs = require('fs');

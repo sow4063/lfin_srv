@@ -86,7 +86,7 @@ module.exports = {
 
     console.log('keyword = ', req.query.keyword );
 
-    let query = {};
+    var query = {};
 
     query['mobileNumber'] = req.query.keyword;
 
@@ -125,8 +125,8 @@ module.exports = {
 
     var codeArr = [];
       
-    for( let i = 0; i < codes.length; i++ ){
-      let newCode = {};
+    for( var i = 0; i < codes.length; i++ ){
+      var newCode = {};
 
       newCode['mobileNumber'] = codes[i][0];         
       newCode['code'] = codes[i][1];
