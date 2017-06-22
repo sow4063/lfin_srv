@@ -62,7 +62,7 @@ module.exports = {
         var current = jsonDate + localtime;
 
         for( var i = 0; i < codes.length; i ++ ) {
-          let obj = {};
+          var obj = {};
         
           obj.mobileNumber = codes[i].mobileNumber;
           obj.bsid = codes[i].bsid;
