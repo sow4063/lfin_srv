@@ -41,6 +41,9 @@ server.listen( port, function(){
 server.on('connection', handleConnection );
 
 function handleConnection(conn) {  
+
+  console.log('handleConnection = ', conn );
+
   var s = JSONDuplexStream();
   var gateway = Gateway();
 
