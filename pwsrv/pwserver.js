@@ -18,6 +18,7 @@ var fs = require('fs');
 var sslPath = '/etc/letsencrypt/live/www.fordicpro.com/';
 
 var options = {  
+  host: 'www.fordicpro.com',
   key: fs.readFileSync( sslPath + 'privkey.pem' ),
   cert: fs.readFileSync( sslPath + 'fullchain.pem' ),
   //ca: fs.readFileSync( sslPath + 'fullchain.pem' )
