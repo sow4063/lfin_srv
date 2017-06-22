@@ -21,8 +21,8 @@ function makeCode(bsid) {
   console.log( 'priCode = ', priCode );
   
   // create the hash value with SHA256
-  let hash = crypto.createHash('sha512').update(priCode, 'utf8').digest('base64').substring(0,60);
-  let code = priCode + hash;
+  var hash = crypto.createHash('sha512').update(priCode, 'utf8').digest('base64').substring(0,60);
+  var code = priCode + hash;
   
   console.log('hash = ', hash.length );
   console.log('code = ', code.length );

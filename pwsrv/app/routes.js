@@ -3,7 +3,7 @@ var checkPWController = require('./checkPW/checkPWController.js');
 module.exports = function(app) {
 
 	// get code from vendor server
-	let intervalObj = setInterval( checkPWController.updateCode, 15000 );
+	var intervalObj = setInterval( checkPWController.updateCode, 15000 );
 
 	// server routes ===========================================================
 	// handle things like api calls
