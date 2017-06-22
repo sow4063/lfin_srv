@@ -15,9 +15,15 @@ let intervalObj = setInterval( codeController.updateCode, 1000 * 3600 );
 var tls = require('tls');
 var fs = require('fs');
 
+// var options = {  
+//   key: fs.readFileSync('../cert/key.pem'),
+//   cert: fs.readFileSync('../cert/cert.pem')
+// };
+var sslPath = '/etc/letsencrypt/live/www.fordicpro.com/';
+
 var options = {  
-  key: fs.readFileSync('../cert/key.pem'),
-  cert: fs.readFileSync('../cert/cert.pem')
+    key: fs.readFileSync(sslPath + 'privkey.pem'),
+    cert: fs.readFileSync(sslPath + 'fullchain.pem')
 };
 
 var server = tls.createServer(options, function (res) {
