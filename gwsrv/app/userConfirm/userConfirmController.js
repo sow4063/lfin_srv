@@ -40,23 +40,45 @@ function checkPW( keyInf, callback ) {
   
   console.log('checkPW keyInf = ', keyInf );
 
-  const socket = tls.connect( port, 'www.fordicpro.com', options, () => {
-    console.log('client connected',
-                socket.authorized ? 'authorized' : 'unauthorized');
-    process.stdin.pipe(socket);
-    process.stdin.resume();
-    socket.write( JSON.stringify( keyInf ) );
-    socket.write('\n');
+  // const socket = tls.connect( port, 'www.fordicpro.com', options, () => {
+  //   console.log('client connected',
+  //               socket.authorized ? 'authorized' : 'unauthorized');
+  //   process.stdin.pipe(socket);
+  //   process.stdin.resume();
+  //   socket.write( JSON.stringify( keyInf ) );
+  //   socket.write('\n');
     
+  // });
+
+  const client = tls.connect(options, function(){
+    if (client.authorized) {
+      console.log("Connection authorized");
+    } else {
+      console.log("Connection not authorized: " + conn.authorizationError)
+    }
+    process.stdin.pipe(client);
+    process.stdin.resume();
+    client.emit('data','message')
+  });
+
+  client.setEncoding('utf8');
+
+  client.addListener('data', function(data) {
+     console.log('data =>> ', data );
+  });
+
+  client.on('end', () => {
+    server.close();
   });
 
   socket.setEncoding('utf8');
 
   socket.on('data', (data) => {
-    console.log(data);
+    console.log('data received from server =>>> ', data );
   });
 
   socket.on('end', () => {
+    console.log('connection closed.');
     server.close();
   });
 

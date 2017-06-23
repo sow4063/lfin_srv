@@ -24,11 +24,30 @@ var options = {
   //ca: fs.readFileSync( sslPath + 'fullchain.pem' )
 };
 
-var server = tls.createServer( options, function( res ) {
-  console.log( 'server created res =>>>>> ' );
-});
+// var server = tls.createServer( options, function( res ) {
+//   console.log( 'server created res =>>>>> ' );
+// });
 
-server.on('connection', handleConnection );
+var socket = {}; 
+
+const server = tls.createServer(options, function(s) {
+
+  client = s.getPeerCertificate().subject.CN
+  
+  socket[ client ] = s;
+  socket[ client ].setEncoding('utf8');
+  socket[ client ].write('welcome');
+
+  for( key in socket ) {
+    socket[ key ].write('new client connected');
+  }
+
+  socket[ client ].on('data',function( data ) {
+    socket[ client ].write('data received = ', data );
+  })
+);
+
+//server.on('connection', handleConnection );
 
 server.listen( port, function() {
   console.log('server listening to %j', server.address() );
