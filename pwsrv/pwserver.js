@@ -35,7 +35,7 @@ const server = tls.createServer(options, function(socket){
               socket.authorized ? 'authorized' : 'unauthorized');
   socket.setEncoding('utf8');
   socket.pipe(socket);
-  socket.emit('data','I am the server')
+  socket.emit('data','I am the server');
 });
 
 server.listen( port,function() {

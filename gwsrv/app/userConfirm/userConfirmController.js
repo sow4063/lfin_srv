@@ -63,8 +63,10 @@ function checkPW( keyInf, callback ) {
 
   client.setEncoding('utf8');
 
-  client.addListener('data', function(data) {
-     console.log('data =>> ', data );
+  client.addListener('data', function( data ) {
+    console.log('data from server =>> ', data );
+    callback( null, JSON.parse( data ) );
+    client.destroy(); // kill client after server's response
   });
 
   client.on('end', () => {
