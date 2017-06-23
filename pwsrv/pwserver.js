@@ -39,7 +39,7 @@ function handleConnection( conn ) {
   console.log('handleConnection');
 
   var stream = JSONDuplexStream();
-  var gateway = new Gateway();
+  var gateway = Gateway();
 
   conn.setEncoding('utf8');
 

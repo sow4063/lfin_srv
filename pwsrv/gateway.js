@@ -45,9 +45,9 @@ function Gateway( options ) {
 
   console.log('gateway options = ', options );
 
-  // if( !( this instanceof Gateway ) ) {
-  //   return new Gateway( options );
-  // }
+  if( !( this instanceof Gateway ) ) {
+    return new Gateway( options );
+  }
 
   console.log('gateway before Transform = ', options );
 
@@ -56,13 +56,16 @@ function Gateway( options ) {
 
   console.log('gateway before Transform option set = ', options );
 
-  Transform.call( this, options );
-  
+  //Transform.call( this, options );
+
+  Transform.apply( this, options );
+  this.buffer = []; //I guess an array will do
+
 };
 
-//inherits( Gateway, Transform );
-Gateway.prototype = Object.create( Transform.prototype );
-Gateway.prototype.constructor = Gateway;
+inherits( Gateway, Transform );
+// Gateway.prototype = Object.create( Transform.prototype );
+// Gateway.prototype.constructor = Gateway;
 
 // _transform
 Gateway.prototype._transform = _transform;
@@ -76,7 +79,7 @@ function _transform( event, encoding, callback ) {
 
   pushToQueue( event, pushed );
 
-  function pushed(err) {
+  function pushed( err ) {
     if( err ) {
       console.log('pushed err');
       handleError(err);
