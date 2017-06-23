@@ -42,9 +42,9 @@ server.listen( port, function() {
   console.log('server listening to %j', server.address() );
 }); 
 
-function handleConnection(conn) {  
+function handleConnection( conn ) {  
 
-  console.log('handleConnection = ', conn );
+  console.log('handleConnection');
 
   var s = JSONDuplexStream();
   var gateway = Gateway();

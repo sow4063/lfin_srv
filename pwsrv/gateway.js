@@ -41,7 +41,7 @@ var defaultOptions = {
   objectMode: true
 };
 
-function Gateway(options) {  
+function Gateway( options ) {  
 
   console.log('gateway options = ', options );
 
@@ -56,7 +56,7 @@ function Gateway(options) {
 
   console.log('gateway before Transform option set = ', options );
 
-  Transform.call(this, options);
+  Transform.call( this, options );
 }
 
 /// _transform
