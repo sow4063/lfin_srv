@@ -35,71 +35,26 @@ var options = {
 function checkPW( keyInf, callback ) {
 
   // verify the LPW to the LPW PWServer.
-  // through TCP
   keyInf['msgid'] = '10';
   
   console.log('checkPW keyInf = ', keyInf );
 
-  // const socket = tls.connect( port, 'www.fordicpro.com', options, () => {
-  //   console.log('client connected',
-  //               socket.authorized ? 'authorized' : 'unauthorized');
-  //   process.stdin.pipe(socket);
-  //   process.stdin.resume();
-  //   socket.write( JSON.stringify( keyInf ) );
-  //   socket.write('\n');
-    
-  // });
-
-  const client = tls.connect( port, 'www.fordicpro.com', options, function(){
-    if (client.authorized) {
-      console.log("Connection authorized");
-    } else {
-      console.log("Connection not authorized: " + conn.authorizationError)
-    }
-    process.stdin.pipe(client);
-    process.stdin.resume();
+  var client = tls.connect( port, 'www.fordicpro.com', options, function () {
+    console.log( client.authorized ? 'Authorized' : 'Not authorized' );
     client.write( JSON.stringify( keyInf ) );
+    client.write('\n');
   });
 
   client.setEncoding('utf8');
 
   client.on('data', function( data ) {
-    console.log('data from server =>> ', data );
     callback( null, JSON.parse( data ) );
     client.destroy(); // kill client after server's response
   });
 
-  client.on('end', () => {
-    console.log('connection closed!!');
+  client.on('close', function() {
+    console.log('Connection closed!!');
   });
-
-  // socket.setEncoding('utf8');
-
-  // socket.on('data', (data) => {
-  //   console.log('data received from server =>>> ', data );
-  // });
-
-  // socket.on('end', () => {
-  //   console.log('connection closed.');
-  //   server.close();
-  // });
-
-  // var client = tls.connect( port, 'www.fordicpro.com', options, function () {
-  //   console.log( client.authorized ? 'Authorized' : 'Not authorized' );
-  //   client.write( JSON.stringify( keyInf ) );
-  //   client.write('\n');
-  // });
-
-  // client.setEncoding('utf8');
-
-  // client.on('data', function( data ) {
-  //   callback( null, JSON.parse( data ) );
-  //   client.destroy(); // kill client after server's response
-  // });
-
-  // client.on('close', function() {
-  //   console.log('Connection closed!!');
-  // });
   
 };
 
