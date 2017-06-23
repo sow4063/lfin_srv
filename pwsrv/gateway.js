@@ -45,9 +45,9 @@ function Gateway( options ) {
 
   console.log('gateway options = ', options );
 
-  if( !( this instanceof Gateway ) ) {
-    return new Gateway( options );
-  }
+  // if( !( this instanceof Gateway ) ) {
+  //   return new Gateway( options );
+  // }
 
   console.log('gateway before Transform = ', options );
 
