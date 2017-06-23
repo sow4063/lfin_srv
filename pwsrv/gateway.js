@@ -59,7 +59,9 @@ function Gateway( options ) {
   Transform.call( this, options );
 };
 
-inherits( Gateway, Transform );
+//inherits( Gateway, Transform );
+Gateway.prototype = Object.create( Transform.prototype );
+Gateway.prototype.constructor = TStream;
 
 // _transform
 Gateway.prototype._transform = _transform;
