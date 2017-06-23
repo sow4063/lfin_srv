@@ -34,7 +34,7 @@ var findCode = function(event){
   return deferred.promise;
 };
 
-inherits(Gateway, Transform);
+inherits( Gateway, Transform );
 
 var defaultOptions = {  
   highWaterMark: 10,
@@ -45,12 +45,16 @@ function Gateway(options) {
 
   console.log('gateway options = ', options );
 
-  if (! (this instanceof Gateway)) {
-    return new Gateway(options);
+  if( !( this instanceof Gateway ) ) {
+    return new Gateway( options );
   }
 
-  options = extend({}, options || {});
-  options = extend(options, defaultOptions);
+  console.log('gateway before Transform = ', options );
+
+  options = extend( {}, options || {} );
+  options = extend( options, defaultOptions );
+
+  console.log('gateway before Transform option set = ', options );
 
   Transform.call(this, options);
 }
