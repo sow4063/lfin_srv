@@ -50,7 +50,7 @@ function checkPW( keyInf, callback ) {
     
   // });
 
-  const client = tls.connect(options, function(){
+  const client = tls.connect( options, function(){
     if (client.authorized) {
       console.log("Connection authorized");
     } else {
@@ -71,16 +71,16 @@ function checkPW( keyInf, callback ) {
     server.close();
   });
 
-  socket.setEncoding('utf8');
+  // socket.setEncoding('utf8');
 
-  socket.on('data', (data) => {
-    console.log('data received from server =>>> ', data );
-  });
+  // socket.on('data', (data) => {
+  //   console.log('data received from server =>>> ', data );
+  // });
 
-  socket.on('end', () => {
-    console.log('connection closed.');
-    server.close();
-  });
+  // socket.on('end', () => {
+  //   console.log('connection closed.');
+  //   server.close();
+  // });
 
   // var client = tls.connect( port, 'www.fordicpro.com', options, function () {
   //   console.log( client.authorized ? 'Authorized' : 'Not authorized' );
