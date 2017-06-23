@@ -33,7 +33,7 @@ const server = tls.createServer(options, (socket) => {
               socket.authorized ? 'authorized' : 'unauthorized');
   socket.write('welcome!\n');
   socket.setEncoding('utf8');
-  socket.pipe(socket);
+  //socket.pipe(socket);
 });
 
 server.on('connection', handleConnection );
