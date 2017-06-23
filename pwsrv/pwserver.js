@@ -30,29 +30,30 @@ var options = {
 
 var socket = {}; 
 
-const server = tls.createServer( options, function(s) {
-
-  client = 'client';
-  
-  socket[ client ] = s;
-  socket[ client ].setEncoding('utf8');
-  socket[ client ].write('welcome');
-
-  for( key in socket ) {
-    socket[ key ].write('new client connected');
-  }
-
-  socket[ client ].on('data',function( data ) {
-    socket[ client ].write('data received = ', data );
-  });
-
+const server = tls.createServer(options, function(socket){
+  console.log('server connected',
+              socket.authorized ? 'authorized' : 'unauthorized');
+  socket.setEncoding('utf8');
+  socket.pipe(socket);
+  socket.emit('data','I am the server')
 });
+
+server.listen( port,function() {
+  console.log('server listening to %j', server.address() );
+})
+
+server.on('connection',function(client){
+  console.log('client connected');
+  client.on('data',function(data){
+    console.log('data from client =>>>> ', data );
+  })
+}) 
 
 //server.on('connection', handleConnection );
 
-server.listen( port, function() {
-  console.log('server listening to %j', server.address() );
-}); 
+// server.listen( port, function() {
+//   console.log('server listening to %j', server.address() );
+// }); 
 
 function handleConnection( conn ) {  
 
