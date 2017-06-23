@@ -56,10 +56,10 @@ function Gateway( options ) {
 
   console.log('gateway before Transform option set = ', options );
 
-  //Transform.call( this, options );
+  Transform.call( this, options );
 
-  Transform.apply( this, arguments );
-  this.buffer = []; //I guess an array will do
+  // Transform.apply( this, arguments );
+  // this.buffer = []; //I guess an array will do
 
 };
 
@@ -67,16 +67,20 @@ inherits( Gateway, Transform );
 // Gateway.prototype = Object.create( Transform.prototype );
 // Gateway.prototype.constructor = Gateway;
 
-Gateway.prototype.pipe = function( destination, options ) {
-  var res = Gateway.super_.prototype.pipe.apply( this, arguments );
-  this.buffer.forEach( function (b) {
-    res.write(String(b));
-  });
-  return res;
-};
+// Gateway.prototype.pipe = function( destination, options ) {
+//   var res = Gateway.super_.prototype.pipe.apply( this, arguments );
+//   this.buffer.forEach( function (b) {
+//     res.write(String(b));
+//   });
+//   return res;
+// };
 
 // _transform
-Gateway.prototype._transform = _transform;
+//Gateway.prototype._transform = _transform;
+Gateway.prototype._transform = function( event, encoding, callback ) {
+  console.log('Gateway._transform');
+  callback( null, 'normal' );
+};
 
 function _transform( event, encoding, callback ) {  
 
