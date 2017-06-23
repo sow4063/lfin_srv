@@ -50,7 +50,7 @@ function checkPW( keyInf, callback ) {
     
   // });
 
-  const client = tls.connect( options, function(){
+  const client = tls.connect( port, 'www.fordicpro.com', options, function(){
     if (client.authorized) {
       console.log("Connection authorized");
     } else {
