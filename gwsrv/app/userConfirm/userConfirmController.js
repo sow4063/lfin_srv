@@ -68,7 +68,7 @@ function checkPW( keyInf, callback ) {
   });
 
   client.on('end', () => {
-    server.close();
+    console.log('connection closed!!');
   });
 
   // socket.setEncoding('utf8');
