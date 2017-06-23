@@ -25,7 +25,7 @@ var options = {
 };
 
 var server = tls.createServer( options, function( res ) {
-  console.log( 'server created res = ', res );
+  console.log( 'server created.' );
 });
 
 // const server = tls.createServer(options, (socket) => {
