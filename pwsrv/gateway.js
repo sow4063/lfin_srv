@@ -58,7 +58,7 @@ function Gateway( options ) {
 
   //Transform.call( this, options );
 
-  Transform.apply( this, options );
+  Transform.apply( this, arguments );
   this.buffer = []; //I guess an array will do
 
 };
@@ -66,6 +66,14 @@ function Gateway( options ) {
 inherits( Gateway, Transform );
 // Gateway.prototype = Object.create( Transform.prototype );
 // Gateway.prototype.constructor = Gateway;
+
+Gateway.prototype.pipe = function( destination, options ) {
+  var res = Gateway.super_.prototype.pipe.apply( this, arguments );
+  this.buffer.forEach( function (b) {
+    res.write(String(b));
+  });
+  return res;
+};
 
 // _transform
 Gateway.prototype._transform = _transform;
