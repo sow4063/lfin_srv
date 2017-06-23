@@ -39,21 +39,34 @@ function checkPW( keyInf, callback ) {
   
   console.log('checkPW keyInf = ', keyInf );
 
-  const net = require('net');
-  const client = net.createConnection({ port: 8100, host: 'www.fordicpro.com' }, () => {
-    //'connect' listener
-    console.log('connected to server!');
-    client.write('world!\r\n');
+  var net = require('net');
+
+  var HOST = 'www.fordicpro.com';
+  var PORT = 8100;
+
+  var client = new net.Socket();
+  client.connect(PORT, HOST, function() {
+
+      console.log('CONNECTED TO: ' + HOST + ':' + PORT);
+      // Write a message to the socket as soon as the client is connected, the server will receive it as message from the client 
+      client.write('checkPW!');
+
   });
 
-  client.on('data', (data) => {
-    console.log('data from server', data.toString() );
-    callback( null, JSON.parse( data ) );
-    client.end();
+  // Add a 'data' event handler for the client socket
+  // data is what the server sent to this socket
+  client.on('data', function(data) {
+      
+      console.log('Data from server : ', data );
+      callback( null, JSON.parse( data ) );
+      // Close the client socket completely
+      client.destroy();
+      
   });
-  
-  client.on('end', () => {
-    console.log('disconnected from server');
+
+  // Add a 'close' event handler for the client socket
+  client.on('close', function() {
+      console.log('Connection closed');
   });
 
   // var client = tls.connect( port, 'www.fordicpro.com', options, function () {

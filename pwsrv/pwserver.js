@@ -24,13 +24,15 @@ var options = {
   //ca: fs.readFileSync( sslPath + 'fullchain.pem' )
 };
 
-var net = require('net');
-
+var net = require('net');  
 var server = net.createServer();  
-server.on('connection', handleConnection);
+var JSONDuplexStream = require('json-duplex-stream');
 
-server.listen( port, 'www.fordicpro.com', function() {  
-  console.log('server listening to %j', server.address());
+var Gateway = require('./gateway')
+
+server.on('connection', handleConnection);  
+server.listen( 8100, 'www.fordicpro.com', function() {  
+  console.log('server listening on %j', server.address());
 });
 
 function handleConnection( conn ) {  
