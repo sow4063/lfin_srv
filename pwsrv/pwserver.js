@@ -46,27 +46,27 @@ function handleConnection( conn ) {
 
   console.log('handleConnection');
 
-  var s = JSONDuplexStream();
+  var stream = JSONDuplexStream();
   var gateway = Gateway();
 
   conn.setEncoding('utf8');
 
   conn.
-    pipe(s.in).
-    pipe(gateway).
-    pipe(s.out).
-    pipe(conn);
+    pipe( stream.in ).
+    pipe( gateway ).
+    pipe( stream.out ).
+    pipe( conn );
 
-  s.in.on('error', onProtocolError ) ;
-  s.out.on('error', onProtocolError );
+  stream.in.on('error', onProtocolError ) ;
+  stream.out.on('error', onProtocolError );
   conn.on('error', onConnError );
 
-  function onProtocolError(err) {
+  function onProtocolError( err ) {
     conn.end('protocol error:' + err.message );
   }
 }
 
-function onConnError(err) {  
+function onConnError( err ) {  
   console.error('connection error:', err.stack );
 };
 
