@@ -58,7 +58,7 @@ function checkPW( keyInf, callback ) {
     }
     process.stdin.pipe(client);
     process.stdin.resume();
-    client.emit('data','message')
+    client.write( JSON.stringify( keyInf ) );
   });
 
   client.setEncoding('utf8');
