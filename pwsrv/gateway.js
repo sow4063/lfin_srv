@@ -159,9 +159,9 @@ function _transform( event, encoding, callback ) {
         policyController.insertpolicy( event );
       }
 
-    } // pushed
+    }
 
-  } // _transform
+  } // pushed
 
   function handleError(err) {
     var reply = {
@@ -170,12 +170,13 @@ function _transform( event, encoding, callback ) {
     };
 
     callback(null, reply);
-  }
-};
+  };
+
+}; // _transform
 
 
 /// Fake push to queue
-function pushToQueue(object, callback) {  
+function pushToQueue( object, callback ) {  
   callback();
 };
 

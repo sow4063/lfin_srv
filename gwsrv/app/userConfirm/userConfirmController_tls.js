@@ -39,39 +39,22 @@ function checkPW( keyInf, callback ) {
   
   console.log('checkPW keyInf = ', keyInf );
 
-  const net = require('net');
-  const client = net.createConnection({ port: 8100, host: 'www.fordicpro.com' }, () => {
-    //'connect' listener
-    console.log('connected to server!');
-    client.write('world!\r\n');
+  var client = tls.connect( port, 'www.fordicpro.com', options, function () {
+    console.log( client.authorized ? 'Authorized' : 'Not authorized' );
+    client.write( JSON.stringify( keyInf ) );
+    client.write('\n');
   });
 
-  client.on('data', (data) => {
-    console.log('data from server', data.toString() );
+  client.setEncoding('utf8');
+
+  client.on('data', function( data ) {
     callback( null, JSON.parse( data ) );
-    client.end();
-  });
-  
-  client.on('end', () => {
-    console.log('disconnected from server');
+    client.destroy(); // kill client after server's response
   });
 
-  // var client = tls.connect( port, 'www.fordicpro.com', options, function () {
-  //   console.log( client.authorized ? 'Authorized' : 'Not authorized' );
-  //   client.write( JSON.stringify( keyInf ) );
-  //   client.write('\n');
-  // });
-
-  // client.setEncoding('utf8');
-
-  // client.on('data', function( data ) {
-  //   callback( null, JSON.parse( data ) );
-  //   client.destroy(); // kill client after server's response
-  // });
-
-  // client.on('close', function() {
-  //   console.log('Connection closed!!');
-  // });
+  client.on('close', function() {
+    console.log('Connection closed!!');
+  });
   
 };
 

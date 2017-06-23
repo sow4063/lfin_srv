@@ -24,14 +24,15 @@ var options = {
   //ca: fs.readFileSync( sslPath + 'fullchain.pem' )
 };
 
-var net = require('net');
-
-var server = net.createServer();  
-server.on('connection', handleConnection);
-
-server.listen( port, 'www.fordicpro.com', function() {  
-  console.log('server listening to %j', server.address());
+var server = tls.createServer( options, function( res ) {
+  console.log( 'server created res =>>>>> ' );
 });
+
+server.on('connection', handleConnection );
+
+server.listen( port, function() {
+  console.log('server listening to %j', server.address() );
+}); 
 
 function handleConnection( conn ) {  
 
