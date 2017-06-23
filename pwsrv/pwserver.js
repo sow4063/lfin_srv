@@ -26,6 +26,7 @@ var options = {
 
 var server = tls.createServer( options, function( res ) {
   console.log( 'server created res =>>>>> ' );
+  res.resume();
 });
 
 server.on('connection', handleConnection );
