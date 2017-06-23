@@ -43,10 +43,11 @@ function checkPW( keyInf, callback ) {
   const socket = tls.connect( port, 'www.fordicpro.com', options, () => {
     console.log('client connected',
                 socket.authorized ? 'authorized' : 'unauthorized');
-    socket.write( JSON.stringify( keyInf ) );
-    socket.write('\n');
     process.stdin.pipe(socket);
     process.stdin.resume();
+    socket.write( JSON.stringify( keyInf ) );
+    socket.write('\n');
+    
   });
 
   socket.setEncoding('utf8');
