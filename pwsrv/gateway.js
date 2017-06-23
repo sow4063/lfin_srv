@@ -56,7 +56,8 @@ function Gateway( options ) {
 
   console.log('gateway before Transform option set = ', options );
 
-  //Transform.call( this, options );
+  Transform.call( this, options );
+  
 };
 
 //inherits( Gateway, Transform );
