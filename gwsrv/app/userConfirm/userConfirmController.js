@@ -40,22 +40,41 @@ function checkPW( keyInf, callback ) {
   
   console.log('checkPW keyInf = ', keyInf );
 
-  var client = tls.connect( port, 'www.fordicpro.com', options, function () {
-    console.log( client.authorized ? 'Authorized' : 'Not authorized' );
-    client.write( JSON.stringify( keyInf ) );
-    client.write('\n');
+  const socket = tls.connect( port, 'www.fordicpro.com', options, () => {
+    console.log('client connected',
+                socket.authorized ? 'authorized' : 'unauthorized');
+    socket.write( JSON.stringify( keyInf ) );
+    socket.write('\n');
+    process.stdin.pipe(socket);
+    process.stdin.resume();
   });
 
-  client.setEncoding('utf8');
+  socket.setEncoding('utf8');
 
-  client.on('data', function( data ) {
-    callback( null, JSON.parse( data ) );
-    client.destroy(); // kill client after server's response
+  socket.on('data', (data) => {
+    console.log(data);
   });
 
-  client.on('close', function() {
-    console.log('Connection closed!!');
+  socket.on('end', () => {
+    server.close();
   });
+
+  // var client = tls.connect( port, 'www.fordicpro.com', options, function () {
+  //   console.log( client.authorized ? 'Authorized' : 'Not authorized' );
+  //   client.write( JSON.stringify( keyInf ) );
+  //   client.write('\n');
+  // });
+
+  // client.setEncoding('utf8');
+
+  // client.on('data', function( data ) {
+  //   callback( null, JSON.parse( data ) );
+  //   client.destroy(); // kill client after server's response
+  // });
+
+  // client.on('close', function() {
+  //   console.log('Connection closed!!');
+  // });
   
 };
 
