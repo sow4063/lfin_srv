@@ -30,7 +30,7 @@ var options = {
 
 var socket = {}; 
 
-const server = tls.createServer(options, function(s) {
+const server = tls.createServer( options, function(s) {
 
   client = s.getPeerCertificate().subject.CN
   
@@ -44,8 +44,9 @@ const server = tls.createServer(options, function(s) {
 
   socket[ client ].on('data',function( data ) {
     socket[ client ].write('data received = ', data );
-  })
-);
+  });
+  
+});
 
 //server.on('connection', handleConnection );
 
