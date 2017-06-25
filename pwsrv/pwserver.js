@@ -32,9 +32,13 @@ const server = tls.createServer( options, (socket) => {
   //   msg: 'welcome!'
   // };
 
-  // socket.write( JSON.stringify(obj) );
-  socket.setEncoding('utf8');
-  socket.pipe(socket);
+  //socket.write( JSON.stringify(obj) );
+  //socket.setEncoding('utf8');
+  //socket.pipe(socket);
+  socket.on('data', function( data ) {
+    console.log( data );
+    console.log( data.toString() );
+  });
 });
 
 server.on('connection', function( client ) {
