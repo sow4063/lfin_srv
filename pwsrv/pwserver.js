@@ -36,31 +36,40 @@ const server = tls.createServer( options, (socket) => {
   //socket.setEncoding('utf8');
   //socket.pipe(socket);
   socket.on('data', function( data ) {
-    console.log( data );
-    console.log( data.toString() );
-  });
-});
-
-server.on('connection', function( client ) {
-
-  console.log('client connected');
-  
-  client.on('data', function( data ) {
     
-    console.log('received data => ', data );
-
     var obj = {
       code: 0,
       msg: 'return message'
     };
 
-    client.write( JSON.stringify(obj) );
-    client.setEncoding('utf8');
-    client.pipe( client );
+    console.log( 'received data from client = ', data.toString() );
 
+    socket.write( JSON.stringify(obj) );
+    
   });
 
-}) ;
+});
+
+// server.on('connection', function( client ) {
+
+//   console.log('client connected');
+  
+//   client.on('data', function( data ) {
+    
+//     console.log('received data => ', data );
+
+//     var obj = {
+//       code: 0,
+//       msg: 'return message'
+//     };
+
+//     client.write( JSON.stringify(obj) );
+//     client.setEncoding('utf8');
+//     client.pipe( client );
+
+//   });
+
+// }) ;
 
 server.listen( port, function() {
   console.log('server listening to %j', server.address() );
