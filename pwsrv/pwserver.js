@@ -29,7 +29,7 @@ const server = tls.createServer( options, (socket) => {
 
   var obj = {
     code: 0,
-    msg: 'welcome!\n'
+    msg: 'welcome!'
   };
 
   socket.write( JSON.stringify(obj) );
@@ -38,6 +38,9 @@ const server = tls.createServer( options, (socket) => {
 });
 
 //server.on('connection', handleConnection );
+server.on('data', (data) => {
+  console.log('server data', data );
+});
 
 server.listen( port, () => {
   console.log('server bound');
