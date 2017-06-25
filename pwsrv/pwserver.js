@@ -26,7 +26,13 @@ var options = {
 
 const server = tls.createServer( options, (socket) => {
   console.log('server connected', socket.authorized ? 'authorized' : 'unauthorized');
-  socket.write('welcome!\n');
+
+  var obj = {
+    code: 0,
+    msg: 'welcome!\n'
+  };
+  
+  socket.write( obj );
   socket.setEncoding('utf8');
   socket.pipe(socket);
 });
