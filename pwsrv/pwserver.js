@@ -47,11 +47,12 @@ server.on('connection', function( client ) {
 
     var obj = {
       code: 0,
-      msg: 'welcome!'
+      msg: 'return message'
     };
 
     socket.write( JSON.stringify(obj) );
     socket.setEncoding('utf8');
+    socket.pipe(socket);
 
   });
 
