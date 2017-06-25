@@ -32,10 +32,6 @@ const server = tls.createServer(options, (socket) => {
   socket.pipe(socket);
 });
 
-server.on('connection', function() {
-  console.log('serve connection')
-});
-
 server.addListener("data", function (data) {
   console.log("Data received: " + data);
 });
@@ -47,7 +43,7 @@ server.listen( port, () => {
 //   console.log( 'server created res =>>>>> ' );
 // });
 
-// server.on('connection', handleConnection );
+server.on('connection', handleConnection );
 
 // server.listen( port, function() {
 //   console.log('server listening to %j', server.address() );
