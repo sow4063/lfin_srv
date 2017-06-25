@@ -60,7 +60,7 @@ const server = tls.createServer( options, (socket) => {
           socket.write( JSON.stringify(reply) );
         })
         .fail( function( error ) {
-          reply.code = error.code;
+          reply.code = 700;
           reply.msg = error;
           console.log('checkPW result[ERR] = ', reply );
           socket.write( JSON.stringify( reply ) );
