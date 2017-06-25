@@ -9,6 +9,7 @@ var db = require('./config/db').db;
 
 // update code at every hour
 // get code from vendor server
+var Q = require('q');
 var keyController = require('./app/pwKey/pwKeyController.js');
 
 var checkPW = function( event ) {
