@@ -9,6 +9,17 @@ var db = require('./config/db').db;
 
 // update code at every hour
 // get code from vendor server
+var keyController = require('./app/pwKey/pwKeyController.js');
+
+var checkPW = function( event ) {
+  var deferred = Q.defer();
+  keyController.confirmPW( event, function(error, result) {
+    if (error) deferred.reject(new Error(error));
+    else deferred.resolve(result);
+  });
+  return deferred.promise;
+};
+
 var codeController = require('./app/code/codeController.js');
 var intervalObj = setInterval( codeController.updateCode, 1000 * 3600 );
 
@@ -25,93 +36,48 @@ var options = {
 };
 
 const server = tls.createServer( options, (socket) => {
+  
   console.log('server connected', socket.authorized ? 'authorized' : 'unauthorized');
 
-  // var obj = {
-  //   code: 0,
-  //   msg: 'welcome!'
-  // };
-
-  //socket.write( JSON.stringify(obj) );
-  //socket.setEncoding('utf8');
-  //socket.pipe(socket);
   socket.on('data', function( data ) {
     
-    var obj = {
-      code: 0,
-      msg: 'return message'
+    var received = JSON.parse( data );
+
+    console.log( 'parsed data from client = ', received );
+
+    var reply = {
+      code: '-1',
+      msg: ''
     };
 
-    console.log( 'received data from client = ', data.toString() );
+    if( received.msgid === '10' ) {
+      checkPW( event )
+        .then( function( result ) {
+          reply.code = result.code;
+          reply.msg = result.msg;
+          console.log('checkPW result[OK] = ', reply );
+          socket.write( JSON.stringify(reply) );
+        })
+        .fail( function( error ) {
+          reply.code = error.code;
+          reply.msg = error;
+          console.log('checkPW result[ERR] = ', reply );
+          socket.write( JSON.stringify( reply ) );
+        });
+    } // msgid = 10
+    else {
+      reply.code = 500;
+      reply.msg = 'serve error';
+      console.log('Invalid Message = ', reply );
+      socket.write( JSON.stringify( reply ) );
+    } // others
 
-    socket.write( JSON.stringify(obj) );
-    
   });
 
 });
-
-// server.on('connection', function( client ) {
-
-//   console.log('client connected');
-  
-//   client.on('data', function( data ) {
-    
-//     console.log('received data => ', data );
-
-//     var obj = {
-//       code: 0,
-//       msg: 'return message'
-//     };
-
-//     client.write( JSON.stringify(obj) );
-//     client.setEncoding('utf8');
-//     client.pipe( client );
-
-//   });
-
-// }) ;
 
 server.listen( port, function() {
   console.log('server listening to %j', server.address() );
 }); 
 
-// var server = tls.createServer( options, function( res ) {
-//   console.log( 'server created res =>>>>> ' );
-// });
-
-//server.on('connection', handleConnection );
-
-// server.listen( port, function() {
-//   console.log('server listening to %j', server.address() );
-// }); 
-
-function handleConnection( conn ) {  
-
-  console.log('handleConnection');
-
-  var stream = JSONDuplexStream();
-  var gateway = Gateway();
-
-  conn.setEncoding('utf8');
-
-  console.log('stream on handleConnection => ', stream.in );
-
-  conn.
-    pipe( stream.in ).
-    pipe( gateway ).
-    pipe( stream.out ).
-    pipe( conn );
-
-  stream.in.on('error', onProtocolError ) ;
-  stream.out.on('error', onProtocolError );
-  conn.on('error', onConnError );
-
-  function onProtocolError( err ) {
-    conn.end('protocol error:' + err.message );
-  }
-}
-
-function onConnError( err ) {  
-  console.error('connection error:', err.stack );
-};
 
