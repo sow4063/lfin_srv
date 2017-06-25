@@ -27,14 +27,14 @@ var options = {
 const server = tls.createServer( options, (socket) => {
   console.log('server connected', socket.authorized ? 'authorized' : 'unauthorized');
 
-  var obj = {
-    code: 0,
-    msg: 'welcome!'
-  };
+  // var obj = {
+  //   code: 0,
+  //   msg: 'welcome!'
+  // };
 
-  socket.write( JSON.stringify(obj) );
-  socket.setEncoding('utf8');
-  socket.pipe(socket);
+  // socket.write( JSON.stringify(obj) );
+  // socket.setEncoding('utf8');
+  // socket.pipe(socket);
 });
 
 server.on('connection', function( client ) {
@@ -50,9 +50,9 @@ server.on('connection', function( client ) {
       msg: 'return message'
     };
 
-    socket.write( JSON.stringify(obj) );
-    socket.setEncoding('utf8');
-    socket.pipe(socket);
+    client.write( JSON.stringify(obj) );
+    client.setEncoding('utf8');
+    client.pipe( client );
 
   });
 
