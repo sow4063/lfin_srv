@@ -26,7 +26,6 @@ var options = {
 
 var server = tls.createServer( options, function( res ) {
   console.log( 'server created res =>>>>> ' );
-  res.resume();
 });
 
 server.on('connection', handleConnection );
@@ -43,6 +42,8 @@ function handleConnection( conn ) {
   var gateway = Gateway();
 
   conn.setEncoding('utf8');
+
+  console.log('stream on handleConnection => ', stream.in );
 
   conn.
     pipe( stream.in ).
