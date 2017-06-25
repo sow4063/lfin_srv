@@ -36,7 +36,7 @@ server.on('connection', function() {
   console.log('serve connection')
 });
 
-socket.addListener("data", function (data) {
+server.addListener("data", function (data) {
   console.log("Data received: " + data);
 });
 
