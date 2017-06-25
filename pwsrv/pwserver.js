@@ -51,7 +51,7 @@ const server = tls.createServer( options, (socket) => {
     };
 
     if( received.msgid === '10' ) {
-      checkPW( event )
+      checkPW( received )
         .then( function( result ) {
           reply.code = result.code;
           reply.msg = result.msg;
