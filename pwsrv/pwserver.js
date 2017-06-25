@@ -37,14 +37,30 @@ const server = tls.createServer( options, (socket) => {
   socket.pipe(socket);
 });
 
-//server.on('connection', handleConnection );
-server.on('data', (data) => {
-  console.log('server data', data );
-});
+server.on('connection', function( client ) {
 
-server.listen( port, () => {
-  console.log('server bound');
-});
+  console.log('client connected');
+  
+  client.on('data', function( data ) {
+    
+    console.log('received data => ', data );
+
+    var obj = {
+      code: 0,
+      msg: 'welcome!'
+    };
+
+    socket.write( JSON.stringify(obj) );
+    socket.setEncoding('utf8');
+
+  });
+
+}) ;
+
+server.listen( port, function() {
+  console.log('server listening to %j', server.address() );
+}); 
+
 // var server = tls.createServer( options, function( res ) {
 //   console.log( 'server created res =>>>>> ' );
 // });
