@@ -24,17 +24,14 @@ var options = {
   //ca: fs.readFileSync( sslPath + 'fullchain.pem' )
 };
 
-const server = tls.createServer(options, (socket) => {
-  console.log('server connected',
-              socket.authorized ? 'authorized' : 'unauthorized');
+const server = tls.createServer( options, (socket) => {
+  console.log('server connected', socket.authorized ? 'authorized' : 'unauthorized');
   socket.write('welcome!\n');
   socket.setEncoding('utf8');
   socket.pipe(socket);
 });
 
-server.addListener("data", function (data) {
-  console.log("Data received: " + data);
-});
+//server.on('connection', handleConnection );
 
 server.listen( port, () => {
   console.log('server bound');
@@ -43,7 +40,7 @@ server.listen( port, () => {
 //   console.log( 'server created res =>>>>> ' );
 // });
 
-server.on('connection', handleConnection );
+//server.on('connection', handleConnection );
 
 // server.listen( port, function() {
 //   console.log('server listening to %j', server.address() );
