@@ -33,8 +33,8 @@ const server = tls.createServer( options, (socket) => {
   // };
 
   // socket.write( JSON.stringify(obj) );
-  // socket.setEncoding('utf8');
-  // socket.pipe(socket);
+  socket.setEncoding('utf8');
+  socket.pipe(socket);
 });
 
 server.on('connection', function( client ) {
