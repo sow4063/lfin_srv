@@ -69,7 +69,7 @@ const server = tls.createServer( options, (socket) => {
     else {
       reply.code = 500;
       reply.msg = 'serve error';
-      console.log('Invalid Message = ', reply );
+      console.log('Invalid MessageID = ', reply );
       socket.write( JSON.stringify( reply ) );
     } // others
 

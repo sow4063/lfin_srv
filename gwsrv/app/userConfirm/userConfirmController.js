@@ -42,7 +42,7 @@ function checkPW( keyInf, callback ) {
   var client = tls.connect( port, 'www.fordicpro.com', options, function () {
     console.log( client.authorized ? 'Authorized' : 'Not authorized' );
     client.write( JSON.stringify( keyInf ) );
-    client.write('\n');
+    //client.write('\n');
   });
 
   client.setEncoding('utf8');
