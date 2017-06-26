@@ -98,7 +98,7 @@ module.exports = {
       .then( function( result ) {
         console.log('sendKey result =  ', result );
 
-        ret.val = aeskey;
+        ret.val = aesKey;
         res.json( ret );
 
         // return the key to the client
