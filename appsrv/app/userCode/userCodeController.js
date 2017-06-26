@@ -43,7 +43,7 @@ function requestCode( mobileNumber, callback ) {
   var client = tls.connect( port, server, options, function () {
     console.log( client.authorized ? 'Authorized' : 'Not authorized' );
     client.write( JSON.stringify( obj ) );
-    client.write('\n');
+    //client.write('\n');
   });
 
   client.setEncoding('utf8');
@@ -67,16 +67,19 @@ module.exports = {
 
     console.log('getCode mobileNumber = ', mobileNumber );
 
+    var ret = {
+      code: 100,
+      msg: '기본코드 요청에 실패했습니다.'
+    };
+
     askCode( mobileNumber )
-      .then(function(buffer){
-        console.log('askCode result = ', buffer );
-        res.json( buffer );
-        
+      .then( function( result ){
+        console.log('askCode result = ', result );
+        res.json( result );  
       })
-      .fail(function(error){
+      .fail( function( error ) {
         console.log('askCode fail : ', error );
-        ret.code = 100;
-        ret.msg = error;
+        ret.val = error;
         res.json( ret );
       });
   },

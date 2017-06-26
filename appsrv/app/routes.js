@@ -13,10 +13,10 @@ module.exports = function(app) {
 	console.log('result of makeRSAKey', result );
 
   app.get('/Code', codeController.getCode );
+  app.get('/AESKey', appKeyController.getAESKey );
   app.get('/Policy', policyController.searchPolicy );
-  
+
 	app.post('/RSAKey', appKeyController.insertRSAKey );
-	app.post('/AESKey', appKeyController.insertAESKey );
 	app.post('/insertPolicy', policyController.insertPolicy );
 
 	// frontend routes =========================================================

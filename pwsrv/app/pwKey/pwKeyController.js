@@ -18,8 +18,8 @@ var searchCode = function(mobileNumber) {
   return deferred.promise;
 };
 
-function comparePW( key, code, uuid, lpw ) {
-  // 암호 = AES( key, code + uuid )
+function comparePW( key, code, mobileNumber, timestamp, lpw ) {
+  // 암호 = AES( key, code + mobileNumber + timestamp )
   var cipher = crypto.createCipher('aes192', key );    // Cipher 객체 생성
   cipher.update( code + uuid, 'utf8', 'base64' );      // 인코딩 방식에 따라 암호화
   var encrypted = cipher.final('base64');              // 암호화된 결과 값
@@ -28,7 +28,8 @@ function comparePW( key, code, uuid, lpw ) {
 
   console.log('comparePW key = ', key );
   console.log('comparePW code = ', code );
-  console.log('comparePW uuid = ', uuid );
+  console.log('comparePW mobileNumber = ', mobileNumber );
+  console.log('comparePW timestamp = ', timestamp );
   console.log('comparePW lpw = ', lpw );
   console.log('comparePW encrypted = ', encrypted );
   
@@ -57,7 +58,7 @@ module.exports = {
             
             console.log('searchCode = ', code );
 
-            if( comparePW( aeskey, code, event.uuid, event.lpw ) ) {
+            if( comparePW( aeskey, code, event.mobileNumber, event.timestamp, event.lpw ) ) {
               console.log('comparePW pass');
               res.code = '0';
               res.msg = '인증 암호 검증에 성공했습니다.';
@@ -87,7 +88,7 @@ module.exports = {
       });
   },
 
-  insertAESKey: function (event, callback) {
+  insertAESKey: function( event, callback ) {
 
     var keyinf = {};
 
@@ -110,9 +111,9 @@ module.exports = {
     };
 
     removeKey( keyinf.mobileNumber )
-      .then(function( result ){
+      .then( function( result ) {
         createKey( keyinf )
-          .then(function( result ){
+          .then( function( result ) {
             console.log('Success on update AES key :: ', result );
             res.code = '0';
             res.msg = 'AES키 등록에 성공했습니다.';

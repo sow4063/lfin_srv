@@ -1,13 +1,14 @@
 var Q = require('q');
 var NodeRSA = require('node-rsa');
 var AppKey = require('./appKeyModel.js');
-var apprsakey = '';
+var rsapubkey = '';
 var rsaprikey = '';
 
 // Promisify a few mongoose methods with the `q` promise library
 //var updateKey = Q.nbind( AppKey.update, AppKey );
 var createKey = Q.nbind( AppKey.create, AppKey );
 var removeKey = Q.nbind( AppKey.remove, AppKey );
+var findKey = Q.nbind( AppKey.findOne, AppKey );
 
 var sendKey = function( keyInf ) {
   var deferred = Q.defer();
@@ -43,7 +44,7 @@ function addKey( keyInf, callback ) {
   var client = tls.connect( port, server, options, function () {
     console.log( client.authorized ? 'Authorized' : 'Not authorized' );
     client.write( JSON.stringify( keyInf ) );
-    client.write('\n');
+    //client.write('\n');
   });
 
   client.setEncoding('utf8');
@@ -61,74 +62,112 @@ function addKey( keyInf, callback ) {
 
 module.exports = {
 
-  insertAESKey: function(req, res, next){
+  getAESKey: function( req, res, next ) {
+
+    var ret = {
+      code: -1,
+      msg: 'ng'
+    };
+
+    var mobileNumber = req.query.mobileNumber;
+    
+    if( !mobileNumber ) {
+      ret.code = 121;
+      ret.msg = '사용자의 RSA key가 존재하지 않습니다.';
+      res.json( ret );  
+    }
+    
+    // generate aes key for the client
+    var aesKey = randomstring.generate({
+      length: 6,
+      charset: 'alphanumeric'
+    });
 
     var keyinf = {};
-
-    // decryption by appserver RSA Key.
-    //console.log('apprsakey = ', apprsakey );
-    var key = new NodeRSA( rsaprikey );
-
-    //console.log( key.isPrivate() );
-
-    //var decrypted = key.decrypt( req.query.aeskey, 'utf8');
-    var encrypted = key.encrypt('AES Key', 'base64');
-    var decrypted = key.decrypt( encrypted, 'utf8');
-    console.log('decrypted: ', decrypted);
-
-    keyinf['key'] = decrypted;
+    
+    keyinf['key'] = aesKey;
     keyinf['keyType'] = 'aes';
-    keyinf['mobileNumber'] = req.query.mobileNumber;
+    keyinf['mobileNumber'] = mobileNumber;
 
-    console.log('insertAESKey input = ', keyinf );
+    console.log('sendAESKey input = ', keyinf );
 
+    // send the key to the pwserver
     sendKey( keyinf )
-      .then(function(result){
+      .then( function( result ) {
         console.log('sendKey result =  ', result );
-        res.json( result );
+
+        // return the key to the client
+        findKey( mobileNumber )
+          .then( function( rsaKey ) {
+            
+            ret.code = result.code;
+            ret.msg = result.msg;
+
+            // return key = priServer( pubClient( aeskey ) )
+            clientKey = new NodeRSA( rsakey.key );
+            var encrypted = clientKey.encrypt( aeskey, 'base64' );
+            
+            serverKey = new NodeRSA( rsaprikey );
+            var send = serverKey.encrypt( encrypted, 'base64');
+            
+            console.log('encrypted, send = [', encrypted, ', ', send, ']');
+            
+            ret.val = send;
+
+            res.json( ret );
+          })
+          .fail( function( error ) {
+            ret.code = 510;
+            ret.msg = 'DB서버 접속 오류가 발생했습니다.';
+            ret.val = error;
+          });
+        
       })
-      .fail(function(error){
+      .fail( function( error ) {
         console.log('sendKey fail : ', error );
-        res.json( error );
+        ret.code = 120;
+        ret.msg = 'AES키 등록에 실패했습니다.';
+        ret.val = error;
+        res.json( ret );
       });
   },
 
   makeRSAKey: function() {
     
-    var key = new NodeRSA({b: 2048});
-    apprsakey = key.exportKey('pkcs8-public-pem');
+    var key = new NodeRSA( {b: 2048} );
+    rsapubkey = key.exportKey('pkcs8-public-pem');
     rsaprikey = key.exportKey('pkcs8-private-pem');
  
     var text = 'Hello RSA!';
-    var encrypted = key.encrypt(text, 'base64');
+    var encrypted = key.encrypt( text, 'base64');
     
     // save the key to the db
     var keyinf = {};
 
-    keyinf['key'] = apprsakey;
+    keyinf['key'] = rsapubkey;
     keyinf['keyType'] = 'rsa';
     keyinf['mobileNumber'] = 'appserver';
 
     console.log('key info = ', keyinf );    
     
-    var decrypted = key.decrypt(encrypted, 'utf8');
+    var decrypted = key.decrypt( encrypted, 'utf8' );
     console.log('decrypted: ', decrypted);
 
     createKey( keyinf )
-      .then(function(result){
+      .then( function( result ) {
         console.log('Success on create RSA key for appserver :: ', result );
 
         // create the RSA key of server and return it to mobile.
         return result;
       })
-      .fail(function(err){
+      .fail( function( err ) {
         console.log('Fail on create the RSA key for appserver :: ', error );
         return error;
       });
 
   },
 
-  insertRSAKey: function (req, res, next) {
+  insertRSAKey: function( req, res, next ) {
 
     var keyinf = {};
 
@@ -138,23 +177,37 @@ module.exports = {
 
     console.log('key info = ', keyinf );
 
+    var ret = {
+      code: 110,
+      msg: 'ng',
+      val: ''
+    };
+
     removeKey( keyinf.mobileNumber )
-      .then(function(result){
+      .then( function( result ) {
         createKey( keyinf )
-          .then(function(result){
+          .then( function( result ) {
             console.log('Success on update RSA key :: ', result );
 
             // create the RSA key of server and return it to mobile.
-            res.json( apprsakey );
+            ret.code = 0;
+            ret.msg = 'RSA키 등록에 성공했습니다.';
+            ret.val = rsapubkey;
+            res.json( ret );
           })
           .fail(function( error ){
             console.log('Fail on update RSA key :: ', error );
-            res.json( error );
+            ret.msg = 'RSA키 등록에 실패했습니다.';
+            ret.val = error;
+            res.json( ret );
           });
       })
       .fail(function( error ){
         console.log('Fail on remove RSA key');
-        res.json( error );
+        ret.code = 520;
+        ret.msg = 'DB 추가시 오류가 발생했습니다.';
+        ret.val = error;
+        res.json( ret );
       });
     
   }

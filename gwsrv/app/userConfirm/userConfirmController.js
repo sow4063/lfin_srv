@@ -60,16 +60,16 @@ function checkPW( keyInf, callback ) {
 
 module.exports = {
 
-	verifyUser: function (req, res, next) {
+	verifyUser: function( req, res, next ) {
 
     // confirm the mobile vendor
     // not exist return 'novendor'
     var mobileNumber = req.query.mobileNumber;
     var CID = req.query.CID;
     var LPW = req.query.LPW;
-    var uuid = req.query.UUID;
+    var timestamp = req.query.timestamp;
 
-    console.log('verifyUser:: ', mobileNumber, CID, LPW, uuid );
+    console.log('verifyUser:: ', mobileNumber, CID, LPW, timestamp );
 
     var ret = {
       code: 0,
@@ -99,7 +99,7 @@ module.exports = {
       var keyInf = {};
       keyInf['mobileNumber'] = mobileNumber;
       keyInf['lpw'] = LPW;
-      keyInf['uuid'] = uuid;
+      keyInf['timestamp'] = timestamp;
       
       confirmPW( keyInf )
         .then(function(buffer){

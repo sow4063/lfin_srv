@@ -7,22 +7,29 @@ var crypto = require("crypto");
 var updateCode = Q.nbind( Code.update, Code );
 var findCode = Q.nbind( Code.find, Code );
 
-function makeCode(bsid) {
+function makeCode( bsid ) {
   // generate 120 bytes according to bsid
   var len = 120 - ('' + bsid ).length;
 
-  priCode = randomstring.generate({
+  var priCode = randomstring.generate({
     length: len,
     charset: 'alphanumeric'
   });
 
-  priCode += bsid;
+  priCode += bsid; // 120
   
   console.log( 'priCode = ', priCode );
   
   // create the hash value with SHA256
-  var hash = crypto.createHash('sha512').update(priCode, 'utf8').digest('base64').substring(0,60);
-  var code = priCode + hash;
+  var hash = crypto.createHash('sha256').update(priCode, 'utf8').digest('base64'); // 44
+
+  // add padding
+  var padCode = randomstring.generate({
+    length: 16,
+    charset: 'alphanumeric'
+  });
+
+  var code = priCode + hash + padCode; // 180
   
   console.log('hash = ', hash.length );
   console.log('code = ', code.length );
@@ -33,16 +40,17 @@ function makeCode(bsid) {
 
 module.exports = {
 
+  
 	searchCode: function( mobileNumber, callback ) {
     var code = '';
     
     Code.findOne({ 'mobileNumber': mobileNumber }, function (err, result) {
       if( err ) 
-        callback(err);
+        callback( err, null );
       
       console.log('Code.findOne bsid, code is = ', result.bsid, code );
       
-      callback(null, code);
+      callback( null, code );
     });
 
   },
