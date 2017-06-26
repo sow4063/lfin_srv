@@ -118,7 +118,7 @@ const server = tls.createServer( options, (socket) => {
           console.log('findCode result[OK] = ', reply );
           socket.write( JSON.stringify( reply ) );
         })
-        .fail( function( error ){
+        .fail( function( error ) {
           reply.code = 140;
           reply.msg = '기본코드 요청에 실패했습니다.';
           reply.val = error;

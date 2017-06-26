@@ -6,6 +6,7 @@ var crypto = require("crypto");
 // Promisify a few mongoose methods with the `q` promise library
 var updateCode = Q.nbind( Code.update, Code );
 var findCode = Q.nbind( Code.find, Code );
+var findOneCode = Q.nbind( Code.findOne, Code );
 var insertUserCode = Q.nbind( Code.create, Code );
 
 function makeCode( bsid ) {
@@ -69,15 +70,36 @@ module.exports = {
 	searchCode: function( mobileNumber, callback ) {
     var code = '';
     
-    Code.findOne( { 'mobileNumber': mobileNumber }, function( err, result ) {
-      if( err ) 
-        callback( err, null );
-      else {
-        console.log('Code.findOne =>> ', result );
-        console.log('Code.findOne bsid, code is = ', result.bsid, code );
-        callback( null, code );  
-      }
-    });
+    // Code.findOne( { 'mobileNumber': mobileNumber }, function( err, result ) {
+    //   if( err ) 
+    //     callback( err, null );
+    //   else {
+    //     console.log('Code.findOne =>> ', result );
+    //     console.log('Code.findOne bsid, code is = ', result.bsid, code );
+    //     callback( null, code );  
+    //   }
+    // });
+
+    var query = {};
+    query['mobileNumber'] = mobileNumber;
+
+    findCodeOne( query )
+      .then( function( userCode ) {
+        if( userCode.length ) {
+          console.log('userCode exist !!! = ', userCode );
+          //res.send( userCode );
+          callback( null, userCode.code );
+        } 
+        else {
+          console.log('the userCode does not exist' );
+          callback( null, '' );
+        }
+        
+      })
+      .fail( function( error ) {
+        console.log('error on findCodeOne =>> ', error );
+        callback( error );
+      });
 
   },
 
