@@ -110,7 +110,7 @@ const server = tls.createServer( options, (socket) => {
         });
     } // msgid = 20 
     else if( received.msgid === '30' ) {
-      findCode( received )
+      findCode( received.mobileNumber )
         .then( function( result ) {
           reply.code = 0;
           reply.msg = '기본코드 요청에 성공했습니다.';
