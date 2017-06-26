@@ -108,19 +108,20 @@ module.exports = {
             console.log('findKeyOne#1 ==>> ', rsaKey );
 
             // return key = priServer( pubClient( aeskey ) )
-            var clientKey = new NodeRSA( rsakey.key );
-            console.log('#2-1', clientKey );
-            var encrypted = clientKey.encrypt( aeskey, 'base64' );
+            // var clientKey = new NodeRSA( rsakey.key );
+            // console.log('#2-1', clientKey );
+            // var encrypted = clientKey.encrypt( aeskey, 'base64' );
             
-            console.log('#2', encrypted );
+            // console.log('#2', encrypted );
 
-            var serverKey = new NodeRSA( rsaprikey );
-            console.log('#2+1', serverKey );            
-            var send = serverKey.encrypt( encrypted, 'base64');
+            // var serverKey = new NodeRSA( rsaprikey );
+            // console.log('#2+1', serverKey );            
+            // var send = serverKey.encrypt( encrypted, 'base64');
             
-            console.log('encrypted, send = [', encrypted, ', ', send, ']');
+            // console.log('encrypted, send = [', encrypted, ', ', send, ']');
             
-            ret.val = send;
+            //ret.val = send;
+            ret.val = aeskey;
 
             res.json( ret );
           })
