@@ -99,7 +99,7 @@ module.exports = {
         console.log('sendKey result =  ', result );
 
         // return the key to the client
-        findKey( mobileNumber )
+        findKey( { 'mobileNumber': mobileNumber } )
           .then( function( rsaKey ) {
 
             ret.code = result.code;
