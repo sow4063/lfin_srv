@@ -53,9 +53,9 @@ module.exports = {
 
     insertUserCode( event )
       .then(function( result ) {
-        console.log('the userConfirm created successfully.', result );
+        console.log('the userCode created successfully.', result );
         res.code = 0;
-        res.msg = 'the userConfirm created successfully.';
+        res.msg = 'the userCode created successfully.';
         callback( null, res );
       })
       .fail( function( error ) {

@@ -53,7 +53,7 @@ function addKey( keyInf, callback ) {
 
   client.on('data', function( data ) {
     callback( null, JSON.parse( data ) );
-    //client.destroy(); // kill client after server's response
+    client.destroy(); // kill client after server's response
   });
 
   client.on('close', function() {
@@ -98,14 +98,17 @@ module.exports = {
       .then( function( result ) {
         console.log('sendKey result =  ', result );
 
+        ret.val = aeskey;
+        res.json( ret );
+
         // return the key to the client
-        findKeyOne( { 'mobileNumber': mobileNumber } )
-          .then( function( rsaKey ) {
+        // findKeyOne( { 'mobileNumber': mobileNumber } )
+        //   .then( function( rsaKey ) {
 
-            ret.code = result.code;
-            ret.msg = result.msg;
+        //     ret.code = result.code;
+        //     ret.msg = result.msg;
 
-            console.log('findKeyOne#1 ==>> ', rsaKey );
+        //     console.log('findKeyOne#1 ==>> ', rsaKey );
 
             // return key = priServer( pubClient( aeskey ) )
             // var clientKey = new NodeRSA( rsakey.key );
@@ -121,15 +124,15 @@ module.exports = {
             // console.log('encrypted, send = [', encrypted, ', ', send, ']');
             
             //ret.val = send;
-            ret.val = aeskey;
+          //   ret.val = aeskey;
 
-            res.json( ret );
-          })
-          .fail( function( error ) {
-            ret.code = 510;
-            ret.msg = 'DB서버 접속 오류가 발생했습니다.';
-            ret.val = error;
-          });
+          //   res.json( ret );
+          // })
+          // .fail( function( error ) {
+          //   ret.code = 510;
+          //   ret.msg = 'DB서버 접속 오류가 발생했습니다.';
+          //   ret.val = error;
+          // });
         
       })
       .fail( function( error ) {
