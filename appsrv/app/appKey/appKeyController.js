@@ -71,7 +71,7 @@ module.exports = {
       msg: 'ng'
     };
 
-    var mobileNumber = req.query.mobileNumber;
+    var mobileNumber = req.body.mobileNumber;
     
     if( !mobileNumber ) {
       ret.code = 121;
