@@ -10,7 +10,7 @@ var rsaprikey = '';
 //var updateKey = Q.nbind( AppKey.update, AppKey );
 var createKey = Q.nbind( AppKey.create, AppKey );
 var removeKey = Q.nbind( AppKey.remove, AppKey );
-var findKey = Q.nbind( AppKey.findOne, AppKey );
+var findKeyOne = Q.nbind( AppKey.findOne, AppKey );
 
 var sendKey = function( keyInf ) {
   var deferred = Q.defer();
@@ -99,11 +99,13 @@ module.exports = {
         console.log('sendKey result =  ', result );
 
         // return the key to the client
-        findKey( { 'mobileNumber': mobileNumber } )
+        findKeyOne( { 'mobileNumber': mobileNumber } )
           .then( function( rsaKey ) {
 
             ret.code = result.code;
             ret.msg = result.msg;
+
+            console.log('findKeyOne#1 ==>> ', rsaKey );
 
             // return key = priServer( pubClient( aeskey ) )
             clientKey = new NodeRSA( rsakey.key );
