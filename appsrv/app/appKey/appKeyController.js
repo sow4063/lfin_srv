@@ -109,7 +109,7 @@ module.exports = {
             var encrypted = clientKey.encrypt( aesKey, 'base64', 'utf8' );
             
             var serverKey = new NodeRSA( rsaprikey );
-            var send = serverKey.encryptPrivate( encrypted, 'base64', 'utf8' );
+            var send = serverKey.encrypt( encrypted, 'base64', 'utf8' );
             
             console.log('encrypted ==>> ', encrypted );
             console.log('send ==>> ', send );
