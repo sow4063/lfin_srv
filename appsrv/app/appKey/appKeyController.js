@@ -107,7 +107,7 @@ module.exports = {
 
             console.log('findKeyOne#1 ==>> ', rsaKey );
 
-            var clientKey = new NodeRSA( rsakey.key );
+            var clientKey = new NodeRSA( rsaKey.key );
             console.log('#2-1', clientKey );
             var encrypted = clientKey.encrypt( aesKey, 'base64' );
             
