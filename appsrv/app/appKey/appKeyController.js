@@ -53,7 +53,7 @@ function addKey( keyInf, callback ) {
 
   client.on('data', function( data ) {
     callback( null, JSON.parse( data ) );
-    client.destroy(); // kill client after server's response
+    //client.destroy(); // kill client after server's response
   });
 
   client.on('close', function() {
