@@ -24,7 +24,7 @@ var sendKey = function( keyInf ) {
 var tls = require('tls');
 var fs = require('fs');
 
-var server = process.env.HOST || 'www.fordicpro.com',;
+var server = process.env.HOST || 'www.fordicpro.com';
 var port = process.env.PORT || 8100;
 
 var sslPath = '/etc/letsencrypt/live/www.fordicpro.com/';
