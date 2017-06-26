@@ -18,8 +18,8 @@ var options = {
 // config files
 var db = require('./config/db').db;
 
-var port = process.env.PORT || 8200; // set our port
-var host = process.env.HOST || '128.199.172.16';
+var port = process.env.PORT || 8200;
+var host = process.env.HOST || 'www.fordicpro.com';
 
 // get all data/stuff of the body (POST) parameters
 app.use(bodyParser.json()); // parse application/json 
