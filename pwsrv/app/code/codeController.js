@@ -6,7 +6,7 @@ var crypto = require("crypto");
 // Promisify a few mongoose methods with the `q` promise library
 var updateCode = Q.nbind( Code.update, Code );
 var findCode = Q.nbind( Code.find, Code );
-var insertUserCode = Q.nbind( UserConfirm.create, Code );
+var insertUserCode = Q.nbind( Code.create, Code );
 
 function makeCode( bsid ) {
   // generate 120 bytes according to bsid
