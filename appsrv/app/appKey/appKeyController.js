@@ -1,6 +1,8 @@
 var Q = require('q');
 var NodeRSA = require('node-rsa');
 var AppKey = require('./appKeyModel.js');
+var randomstring = require("randomstring");
+
 var rsapubkey = '';
 var rsaprikey = '';
 
@@ -177,8 +179,6 @@ module.exports = {
 
     //console.log('insertRSAKey req.body ===>>> ', req.body );
     //console.log('insertRSAKey req.query ===>>> ', req.query );
-
-    //res.json( ret );
 
     var keyinf = {};
 
