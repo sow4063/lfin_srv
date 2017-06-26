@@ -106,10 +106,10 @@ module.exports = {
             ret.msg = result.msg;
 
             var clientKey = new NodeRSA( rsaKey.key );
-            var encrypted = clientKey.encrypt( aesKey, 'base64', 'utf-8' );
+            var encrypted = clientKey.encrypt( aesKey, 'base64', 'utf8' );
             
             var serverKey = new NodeRSA( rsaprikey );
-            var send = serverKey.encrypt( encrypted, 'base64', 'utf-8' );
+            var send = serverKey.encryptPrivate( encrypted, 'base64', 'utf8' );
             
             console.log('encrypted ==>> ', encrypted );
             console.log('send ==>> ', send );
