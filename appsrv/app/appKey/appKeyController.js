@@ -175,20 +175,18 @@ module.exports = {
       val: ''
     };
 
-    console.log('insertRSAKey req.body ===>>> ', req.body );
-    console.log('insertRSAKey req.query ===>>> ', req.query );
+    //console.log('insertRSAKey req.body ===>>> ', req.body );
+    //console.log('insertRSAKey req.query ===>>> ', req.query );
 
-    res.json( ret );
+    //res.json( ret );
 
     var keyinf = {};
 
-    keyinf['key'] = req.query.rsakey;
+    keyinf['key'] = req.body.rsakey;
     keyinf['keyType'] = 'rsa';
-    keyinf['mobileNumber'] = req.query.mobileNumber;
+    keyinf['mobileNumber'] = req.body.mobileNumber;
 
     console.log('key info = ', keyinf );
-
-    
 
     removeKey( keyinf.mobileNumber )
       .then( function( result ) {
