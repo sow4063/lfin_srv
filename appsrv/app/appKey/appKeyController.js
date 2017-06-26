@@ -107,10 +107,9 @@ module.exports = {
 
             console.log('findKeyOne#1 ==>> ', rsaKey );
 
-            return key = priServer( pubClient( aesKey ) )
             var clientKey = new NodeRSA( rsakey.key );
             console.log('#2-1', clientKey );
-            var encrypted = clientKey.encrypt( aeskey, 'base64' );
+            var encrypted = clientKey.encrypt( aesKey, 'base64' );
             
             console.log('#2', encrypted );
 
