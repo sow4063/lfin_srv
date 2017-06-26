@@ -105,19 +105,15 @@ module.exports = {
             ret.code = result.code;
             ret.msg = result.msg;
 
-            console.log('findKeyOne#1 ==>> ', rsaKey );
-
             var clientKey = new NodeRSA( rsaKey.key );
-            console.log('#2-1', clientKey );
             var encrypted = clientKey.encrypt( aesKey, 'base64' );
             
-            console.log('#2', encrypted );
-
             var serverKey = new NodeRSA( rsaprikey );
-            console.log('#2+1', serverKey );            
-            var send = serverKey.encrypt( encrypted, 'base64');
+            console.log('rsaprikey ==>> ', rsaprikey );
+            var send = serverKey.encrypt( encrypted, 'base64' );
             
-            console.log('encrypted, send = [', encrypted, ', ', send, ']');
+            console.log('encrypted ==>> ', encrypted );
+            console.log('send ==>> ', send );
             
             ret.val = send;
 
