@@ -98,41 +98,37 @@ module.exports = {
       .then( function( result ) {
         console.log('sendKey result =  ', result );
 
-        ret.val = aesKey;
-        res.json( ret );
-
         // return the key to the client
-        // findKeyOne( { 'mobileNumber': mobileNumber } )
-        //   .then( function( rsaKey ) {
+        findKeyOne( { 'mobileNumber': mobileNumber } )
+          .then( function( rsaKey ) {
 
-        //     ret.code = result.code;
-        //     ret.msg = result.msg;
+            ret.code = result.code;
+            ret.msg = result.msg;
 
-        //     console.log('findKeyOne#1 ==>> ', rsaKey );
+            console.log('findKeyOne#1 ==>> ', rsaKey );
 
-            // return key = priServer( pubClient( aeskey ) )
-            // var clientKey = new NodeRSA( rsakey.key );
-            // console.log('#2-1', clientKey );
-            // var encrypted = clientKey.encrypt( aeskey, 'base64' );
+            return key = priServer( pubClient( aesKey ) )
+            var clientKey = new NodeRSA( rsakey.key );
+            console.log('#2-1', clientKey );
+            var encrypted = clientKey.encrypt( aeskey, 'base64' );
             
-            // console.log('#2', encrypted );
+            console.log('#2', encrypted );
 
-            // var serverKey = new NodeRSA( rsaprikey );
-            // console.log('#2+1', serverKey );            
-            // var send = serverKey.encrypt( encrypted, 'base64');
+            var serverKey = new NodeRSA( rsaprikey );
+            console.log('#2+1', serverKey );            
+            var send = serverKey.encrypt( encrypted, 'base64');
             
-            // console.log('encrypted, send = [', encrypted, ', ', send, ']');
+            console.log('encrypted, send = [', encrypted, ', ', send, ']');
             
-            //ret.val = send;
-          //   ret.val = aeskey;
+            ret.val = send;
 
-          //   res.json( ret );
-          // })
-          // .fail( function( error ) {
-          //   ret.code = 510;
-          //   ret.msg = 'DB서버 접속 오류가 발생했습니다.';
-          //   ret.val = error;
-          // });
+            res.json( ret );
+          })
+          .fail( function( error ) {
+            ret.code = 510;
+            ret.msg = 'DB서버 접속 오류가 발생했습니다.';
+            ret.val = error;
+          });
         
       })
       .fail( function( error ) {
