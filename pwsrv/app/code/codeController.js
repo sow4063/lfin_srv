@@ -69,13 +69,14 @@ module.exports = {
 	searchCode: function( mobileNumber, callback ) {
     var code = '';
     
-    Code.findOne({ 'mobileNumber': mobileNumber }, function (err, result) {
+    Code.findOne( { 'mobileNumber': mobileNumber }, function( err, result ) {
       if( err ) 
         callback( err, null );
-      
-      console.log('Code.findOne bsid, code is = ', result.bsid, code );
-      
-      callback( null, code );
+      else {
+        console.log('Code.findOne =>> ', result );
+        console.log('Code.findOne bsid, code is = ', result.bsid, code );
+        callback( null, code );  
+      }
     });
 
   },
