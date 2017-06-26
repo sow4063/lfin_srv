@@ -94,7 +94,7 @@ const server = tls.createServer( options, (socket) => {
           socket.write( JSON.stringify( reply ) );
         });
     } // msgid = 10
-    else if( event.msgid === '20' ) {
+    else if( received.msgid === '20' ) {
       insertAES( event )
         .then( function( result ) {
           reply.code = result.code;
@@ -109,7 +109,7 @@ const server = tls.createServer( options, (socket) => {
           socket.write( JSON.stringify( reply ) );
         });
     } // msgid = 20 
-    else if( event.msgid === '30' ) {
+    else if( received.msgid === '30' ) {
       findCode( event )
         .then( function( result ) {
           reply.code = 0;
@@ -126,7 +126,7 @@ const server = tls.createServer( options, (socket) => {
           socket.write( JSON.stringify( reply ) );
         });
     } // msgid = 30
-    else if( event.msgid === '33' ) {
+    else if( received.msgid === '33' ) {
       addCode( event )
         .then( function( result ) {
           console.log('addCode result[OK] = ', result );
