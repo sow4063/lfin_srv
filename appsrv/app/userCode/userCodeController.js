@@ -74,7 +74,7 @@ function insertCode( codeinf, callback ) {
 
   // add appkey to the LPW PWServer.
   codeinf['msgid'] = '33';
-  
+
   console.log('insertCode codeinf = ', codeinf );
 
   var client = tls.connect( port, server, options, function () {
@@ -100,7 +100,7 @@ module.exports = {
   insertCode: function( req, res, next ) {
 
     var codeobj = {
-      'mobileNumber': req.query.mobileNumber;,
+      'mobileNumber': req.query.mobileNumber,
       'bsid': req.query.bsid,
       'code': req.query.code,
       'updateDate': req.query.updateDate
