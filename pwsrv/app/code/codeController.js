@@ -76,7 +76,7 @@ module.exports = {
     findCodeOne( query )
       .then( function( userCode ) {
         console.log('userCode =>>>>>>> ', userCode );
-        if( userCode.length ) {
+        if( userCode.code ) {
           console.log('userCode exist !!! = ', userCode );
           callback( null, userCode.code );
         } 
