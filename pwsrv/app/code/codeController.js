@@ -6,6 +6,7 @@ var crypto = require("crypto");
 // Promisify a few mongoose methods with the `q` promise library
 var updateCode = Q.nbind( Code.update, Code );
 var findCode = Q.nbind( Code.find, Code );
+var insertUserCode = Q.nbind( UserConfirm.create, Code );
 
 function makeCode( bsid ) {
   // generate 120 bytes according to bsid
@@ -40,6 +41,30 @@ function makeCode( bsid ) {
 
 module.exports = {
 
+  insertCode: function( event, callback ) {
+
+    console.log('insertCode event =>> ', event );
+
+    var res = {
+      'code': 'default',
+      'msg': 'default'
+    };
+
+    insertUserCode( event )
+      .then(function( result ) {
+        console.log('the userConfirm created successfully.', result );
+        res.code = 0;
+        res.msg = 'the userConfirm created successfully.';
+        callback( null, res );
+      })
+      .fail( function( error ) {
+        console.log('create userConfirm Error.', error );
+        res.code = 9999;
+        res.msg = 'create userConfirm Error.';
+        callback( err, res );
+      }); 
+
+  },
   
 	searchCode: function( mobileNumber, callback ) {
     var code = '';

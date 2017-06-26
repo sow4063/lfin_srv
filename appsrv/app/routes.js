@@ -18,6 +18,7 @@ module.exports = function(app) {
 
 	app.post('/RSAKey', appKeyController.insertRSAKey );
 	app.post('/insertPolicy', policyController.insertPolicy );
+	app.post('/insertCode', codeController.insertCode );
 
 	// frontend routes =========================================================
 	// route to handle all angular requests

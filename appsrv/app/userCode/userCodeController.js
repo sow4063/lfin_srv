@@ -10,9 +10,20 @@ var removeUserCodes = Q.nbind(UserCode.remove, UserCode);
 var askCode = function( mobileNumber ) {
   var deferred = Q.defer();
 
-  requestCode( mobileNumber, function(error, result) {
-    if (error) deferred.reject(new Error(error));
-    else deferred.resolve(result);
+  requestCode( mobileNumber, function( error, result ) {
+    if( error ) deferred.reject( new Error( error ) );
+    else deferred.resolve( result );
+  });
+  
+  return deferred.promise;
+};
+
+var addCode = function( codeinf ) {
+  var deferred = Q.defer();
+
+  insertCode( codeinf, function( error, result ) {
+    if( error ) deferred.reject( new Error( error ) );
+    else deferred.resolve( result );
   });
   
   return deferred.promise;
@@ -59,9 +70,57 @@ function requestCode( mobileNumber, callback ) {
 
 };
 
+function insertCode( codeinf, callback ) {
+
+  // add appkey to the LPW PWServer.
+  codeinf['msgid'] = '33';
+  
+  console.log('insertCode codeinf = ', codeinf );
+
+  var client = tls.connect( port, server, options, function () {
+    console.log( client.authorized ? 'Authorized' : 'Not authorized' );
+    client.write( JSON.stringify( codeinf ) );
+  });
+
+  client.setEncoding('utf8');
+
+  client.on('data', function( data ) {
+    callback( null, JSON.parse( data ) );
+    client.destroy(); // kill client after server's response
+  });
+
+  client.on('close', function() {
+    console.log('Connection closed!!');
+  });
+
+};
+
 module.exports = {
 
-  getCode: function(req, res, next) {
+  insertCode: function( req, res, next ) {
+
+    var codeobj = {
+      'mobileNumber': req.query.mobileNumber;,
+      'bsid': req.query.bsid,
+      'code': req.query.code,
+      'updateDate': req.query.updateDate
+    };
+
+    console.log('insertCode =>> ', codeobj );
+
+    addCode( codeobj )
+      .then( function( result ){
+        console.log('addCode result = ', result );
+        res.json( result );  
+      })
+      .fail( function( error ) {
+        console.log('addCode fail : ', error );
+        ret.val = error;
+        res.json( ret );
+      });
+  },
+
+  getCode: function( req, res, next ) {
 
     var mobileNumber = req.query.mobileNumber;
 

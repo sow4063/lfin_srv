@@ -45,6 +45,15 @@ var findCode = function( event ){
   return deferred.promise;
 };
 
+var addCode = function( event ){
+  var deferred = Q.defer();
+  codeController.insertCode( event, function( error, result ) {
+    if( error ) deferred.reject( new Error( error ) );
+    else deferred.resolve( result );
+  });
+  return deferred.promise;
+};
+
 var sslPath = '/etc/letsencrypt/live/www.fordicpro.com/';
 
 var options = {  
@@ -117,6 +126,20 @@ const server = tls.createServer( options, (socket) => {
           socket.write( JSON.stringify( reply ) );
         });
     } // msgid = 30
+    else if( event.msgid === '33' ) {
+      addCode( event )
+        .then( function( result ) {
+          console.log('addCode result[OK] = ', result );
+          socket.write( JSON.stringify( result ) );
+        })
+        .fail( function( error ){
+          reply.code = 140;
+          reply.msg = '코드 추가에 실패했습니다.';
+          reply.val = error;
+          console.log('findCode result[ERR] = ', reply );
+          socket.write( JSON.stringify( reply ) );
+        });
+    } // msgid = 33
     else {
       reply.code = 500;
       reply.msg = 'serve error';
