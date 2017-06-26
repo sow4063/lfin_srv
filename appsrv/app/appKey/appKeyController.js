@@ -169,6 +169,17 @@ module.exports = {
 
   insertRSAKey: function( req, res, next ) {
 
+    var ret = {
+      code: 110,
+      msg: 'ng',
+      val: ''
+    };
+
+    console.log('insertRSAKey req.body ===>>> ', req.body );
+    console.log('insertRSAKey req.query ===>>> ', req.query );
+
+    res.json( ret );
+
     var keyinf = {};
 
     keyinf['key'] = req.query.rsakey;
@@ -177,11 +188,7 @@ module.exports = {
 
     console.log('key info = ', keyinf );
 
-    var ret = {
-      code: 110,
-      msg: 'ng',
-      val: ''
-    };
+    
 
     removeKey( keyinf.mobileNumber )
       .then( function( result ) {
