@@ -95,7 +95,7 @@ const server = tls.createServer( options, (socket) => {
         });
     } // msgid = 10
     else if( received.msgid === '20' ) {
-      insertAES( event )
+      insertAES( received )
         .then( function( result ) {
           reply.code = result.code;
           reply.msg = result.msg;
@@ -110,7 +110,7 @@ const server = tls.createServer( options, (socket) => {
         });
     } // msgid = 20 
     else if( received.msgid === '30' ) {
-      findCode( event )
+      findCode( received )
         .then( function( result ) {
           reply.code = 0;
           reply.msg = '기본코드 요청에 성공했습니다.';
@@ -127,7 +127,7 @@ const server = tls.createServer( options, (socket) => {
         });
     } // msgid = 30
     else if( received.msgid === '33' ) {
-      addCode( event )
+      addCode( received )
         .then( function( result ) {
           console.log('addCode result[OK] = ', result );
           socket.write( JSON.stringify( result ) );
