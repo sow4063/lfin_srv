@@ -73,7 +73,8 @@ module.exports = {
 
     var ret = {
       code: 0,
-      msg: '인증 암호 검증에 성공했습니다.'
+      msg: '인증 암호 검증에 성공했습니다.',
+      val: ''
     };
 
     if( !mobileNumber || !LPW || timestamp ) {
@@ -87,12 +88,11 @@ module.exports = {
         'timestamp': timestamp
       };
 
-      ret.val = obj;
+      ret.val = JSON.stringify( obj );
 
       res.json( ret );
     }
-    
-    if( !isExistVendor( mobileNumber ) ) {
+    else if( !isExistVendor( mobileNumber ) ) {
       console.log('no vendor is exist for the mobile number. ', mobileNumber );
       ret.code = 800;
       ret.msg = '통신 사업자가 존재하지 않습니다.';
@@ -118,30 +118,31 @@ module.exports = {
       keyInf['timestamp'] = timestamp;
       
       confirmPW( keyInf )
-        .then(function(buffer){
-          console.log('confirmPW result = ', buffer );
-          ret.code = buffer.code;
-          ret.msg = buffer.msg;
+        .then( function( result ) {
+          console.log('confirmPW result = ', result );
+          ret.code = result.code;
+          ret.msg = result.msg;
 
-          userConfirm['verifyResult'] = buffer.code === '0' ? true : false;
+          userConfirm['verifyResult'] = result.code === '0' ? true : false;
 
           console.log('userConfirm ', userConfirm );
 
           insertUserConfirm( userConfirm )
-            .then(function(result){
-              console.log('the userConfirm created successfully.', result );
+            .then( function( insertResult ) {
+              console.log('the userConfirm created successfully.', insertResult );
             })
-            .fail(function(error){
+            .fail( function( error ) {
               console.log('create userConfirm Error.', error );
             }); 
 
           res.json( ret );
           
         })
-        .fail(function(error){
+        .fail( function( error ) {
           console.log('confirmPW fail : ', error );
-          ret.code = 100;
-          ret.msg = error;
+          ret.code = 110;
+          ret.msg = '인증 암호가 검증에 실패했습니다.'
+          ret.val = error;
           res.json( ret );
         });
 
