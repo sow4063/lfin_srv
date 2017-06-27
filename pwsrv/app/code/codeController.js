@@ -61,15 +61,23 @@ module.exports = {
         updateCode( userCode, event, {upsert: true} )
           .then( function( result ) {
             console.log('Success on updateCode = ', result );
+            res.code = 0;
+            res.msg = 'the userCode created successfully.';
+            callback( null, res );
           })
           .fail( function( error ) {
             console.log('Error on updateCode = ', error );
+            res.code = 9999;
+            res.msg = 'create userConfirm Error.';
+            callback( err, res );
           });
         
       })
       .fail( function( error ) {
         console.log('error on findCodeOne =>> ', error );
-        callback( error );
+        res.code = 9998;
+        res.msg = 'error on findCodeOne';
+        callback( err, res );
       });
 
     // insertUserCode( event )
