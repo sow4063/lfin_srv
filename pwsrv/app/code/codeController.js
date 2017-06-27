@@ -78,21 +78,7 @@ module.exports = {
         res.code = 9998;
         res.msg = 'error on findCodeOne';
         callback( err, res );
-      });
-
-    // insertUserCode( event )
-    //   .then(function( result ) {
-    //     console.log('the userCode created successfully.', result );
-    //     res.code = 0;
-    //     res.msg = 'the userCode created successfully.';
-    //     callback( null, res );
-    //   })
-    //   .fail( function( error ) {
-    //     console.log('create userConfirm Error.', error );
-    //     res.code = 9999;
-    //     res.msg = 'create userConfirm Error.';
-    //     callback( err, res );
-    //   }); 
+      }); 
 
   },
   

@@ -6,6 +6,7 @@ var app            = express();
 var mongoose       = require('mongoose');
 var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
+var http = require('http');
 
 // configuration ===========================================
 var sslPath = '/etc/letsencrypt/live/www.fordicpro.com/';
@@ -35,6 +36,12 @@ require('./app/routes')(app); // pass our application into our routes
 // start app ===============================================
 https.createServer(options, app).listen( port, host, null, function() {
   console.log('Server listening on port %d in %s mode', this.address().port, app.settings.env );
+});
+
+var server = http.createServer( function( req, res ) {
+  res.write('http server response');
+}).listen( 8500, function(){
+	res.write('http server listening on 8500');
 });
 
 exports = module.exports = app; 						// expose app
