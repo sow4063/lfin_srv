@@ -12,6 +12,7 @@ module.exports = function(app) {
 	var result = appKeyController.makeRSAKey();
 	console.log('result of makeRSAKey', result );
 
+  app.get('/Code2.lfin', codeController.getCode );
   app.get('/Code', codeController.getCode );
   app.get('/AESKey', appKeyController.getAESKey );
   app.get('/Policy', policyController.searchPolicy );
