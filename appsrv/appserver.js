@@ -41,7 +41,7 @@ https.createServer(options, app).listen( port, host, null, function() {
 var server = http.createServer( function( req, res ) {
   res.write('http server response');
 }).listen( 8500, function(){
-	res.write('http server listening on 8500');
+	console.log('http server listening on 8500');
 });
 
 exports = module.exports = app; 						// expose app
