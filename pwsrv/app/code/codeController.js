@@ -51,19 +51,40 @@ module.exports = {
       'msg': 'default'
     };
 
-    insertUserCode( event )
-      .then(function( result ) {
-        console.log('the userCode created successfully.', result );
-        res.code = 0;
-        res.msg = 'the userCode created successfully.';
-        callback( null, res );
+    var query = {};
+    query['mobileNumber'] = event.mobileNumber;
+
+    findCodeOne( query )
+      .then( function( userCode ) {
+        console.log('userCode =>>>>>>> ', userCode );
+        
+        updateCode( userCode, event, {upsert: true} )
+          .then( function( result ) {
+            console.log('Success on updateCode = ', result );
+          })
+          .fail( function( error ) {
+            console.log('Error on updateCode = ', error );
+          });
+        
       })
       .fail( function( error ) {
-        console.log('create userConfirm Error.', error );
-        res.code = 9999;
-        res.msg = 'create userConfirm Error.';
-        callback( err, res );
-      }); 
+        console.log('error on findCodeOne =>> ', error );
+        callback( error );
+      });
+
+    // insertUserCode( event )
+    //   .then(function( result ) {
+    //     console.log('the userCode created successfully.', result );
+    //     res.code = 0;
+    //     res.msg = 'the userCode created successfully.';
+    //     callback( null, res );
+    //   })
+    //   .fail( function( error ) {
+    //     console.log('create userConfirm Error.', error );
+    //     res.code = 9999;
+    //     res.msg = 'create userConfirm Error.';
+    //     callback( err, res );
+    //   }); 
 
   },
   
