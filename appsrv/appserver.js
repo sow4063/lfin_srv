@@ -38,10 +38,8 @@ require('./app/routes')(app); // pass our application into our routes
 //   console.log('Server listening on port %d in %s mode', this.address().port, app.settings.env );
 // });
 
-var server = http.createServer( function( req, res ) {
-  res.write('http server response');
-}).listen( 8500, host, null, function(){
-	console.log('http server listening on 8500');
+http.createServer(app).listen( 8500, function(){  
+  console.log("Http server listening on port 8500");
 });
 
 exports = module.exports = app; 						// expose app
