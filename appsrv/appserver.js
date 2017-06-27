@@ -40,7 +40,7 @@ https.createServer(options, app).listen( port, host, null, function() {
 
 var server = http.createServer( function( req, res ) {
   res.write('http server response');
-}).listen( 8500, function(){
+}).listen( 8500, host, null, function(){
 	console.log('http server listening on 8500');
 });
 
