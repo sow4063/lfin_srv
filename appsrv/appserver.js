@@ -34,9 +34,9 @@ app.use(express.static(__dirname + '/public')); // set the static files location
 require('./app/routes')(app); // pass our application into our routes
 
 // start app ===============================================
-https.createServer(options, app).listen( port, host, null, function() {
-  console.log('Server listening on port %d in %s mode', this.address().port, app.settings.env );
-});
+// https.createServer(options, app).listen( port, host, null, function() {
+//   console.log('Server listening on port %d in %s mode', this.address().port, app.settings.env );
+// });
 
 var server = http.createServer( function( req, res ) {
   res.write('http server response');
