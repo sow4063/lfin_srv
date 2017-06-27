@@ -100,10 +100,10 @@ module.exports = {
   insertCode: function( req, res, next ) {
 
     var codeobj = {
-      'mobileNumber': req.query.mobileNumber,
-      'bsid': req.query.bsid,
-      'code': req.query.code,
-      'updateDate': req.query.updateDate
+      'mobileNumber': req.body.mobileNumber,
+      'bsid': req.body.bsid,
+      'code': req.body.code,
+      'updateDate': req.body.updateDate
     };
 
     console.log('insertCode =>> ', codeobj );
