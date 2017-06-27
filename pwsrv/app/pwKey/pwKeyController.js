@@ -21,7 +21,7 @@ var searchCode = function(mobileNumber) {
 function comparePW( key, code, mobileNumber, timestamp, lpw ) {
   // 암호 = AES( key, code + mobileNumber + timestamp )
   var cipher = crypto.createCipher('aes192', key );    // Cipher 객체 생성
-  cipher.update( code + uuid, 'utf8', 'base64' );      // 인코딩 방식에 따라 암호화
+  cipher.update( code + mobileNumber + timestamp, 'utf8', 'base64' );      // 인코딩 방식에 따라 암호화
   var encrypted = cipher.final('base64');              // 암호화된 결과 값
 
   var ret = ( lpw == encrypted );

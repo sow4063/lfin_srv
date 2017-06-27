@@ -64,10 +64,10 @@ module.exports = {
 
     // confirm the mobile vendor
     // not exist return 'novendor'
-    var mobileNumber = req.query.mobileNumber;
-    var CID = req.query.CID;
-    var LPW = req.query.LPW;
-    var timestamp = req.query.timestamp;
+    var mobileNumber = req.body.mobileNumber;
+    var CID = req.body.CID;
+    var LPW = req.body.LPW;
+    var timestamp = req.body.timestamp;
 
     console.log('verifyUser:: ', mobileNumber, CID, LPW, timestamp );
 
@@ -75,6 +75,22 @@ module.exports = {
       code: 0,
       msg: '인증 암호 검증에 성공했습니다.'
     };
+
+    if( !mobileNumber || !LPW || timestamp ) {
+      ret.code = 999;
+      ret.msg = '입력 정보가 없습니다.';
+      
+      var obj = {
+        'mobileNumber': mobileNumber,
+        'CID': CID,
+        'LPW': LPW,
+        'timestamp': timestamp
+      };
+
+      ret.val = obj;
+
+      res.json( ret );
+    }
     
     if( !isExistVendor( mobileNumber ) ) {
       console.log('no vendor is exist for the mobile number. ', mobileNumber );
