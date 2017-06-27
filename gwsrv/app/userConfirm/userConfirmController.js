@@ -77,7 +77,7 @@ module.exports = {
       val: ''
     };
 
-    if( !mobileNumber || !LPW || timestamp ) {
+    if( !mobileNumber || !LPW || !timestamp ) {
       ret.code = 999;
       ret.msg = '입력 정보가 없습니다.';
       
@@ -91,13 +91,13 @@ module.exports = {
       ret.val = JSON.stringify( obj );
 
       res.json( ret );
-    }
+    } // invalid input 
     else if( !isExistVendor( mobileNumber ) ) {
       console.log('no vendor is exist for the mobile number. ', mobileNumber );
       ret.code = 800;
       ret.msg = '통신 사업자가 존재하지 않습니다.';
       res.json( ret );
-    }
+    } // no vendor
     else {
       // ask verification to the L-PW PW server
       var userConfirm = {};
