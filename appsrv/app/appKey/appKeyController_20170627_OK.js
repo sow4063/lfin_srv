@@ -64,6 +64,17 @@ function addKey( keyInf, callback ) {
 
 module.exports = {
 
+  getAppkey: function(req, res) {
+    console.log('getAppkey');
+
+    var ret = {
+      pub: rsapubkey,
+      pri: rsaprikey
+    };
+
+    res.json( ret );
+  }, 
+
   getAESKey: function( req, res, next ) {
 
     var ret = {

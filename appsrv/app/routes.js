@@ -19,6 +19,7 @@ module.exports = function(app) {
   app.get('/Code2.lfin', codeController.getCode );
   app.get('/Code', codeController.getCode );
   app.get('/AESKey', appKeyController.getAESKey );
+  app.get('/appkey', appKeyController.getAppkey );
   app.get('/Policy', policyController.searchPolicy );
 
 	app.post('/RSAKey', appKeyController.insertRSAKey );
