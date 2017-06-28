@@ -131,16 +131,24 @@ module.exports = {
       msg: '기본코드 요청에 실패했습니다.'
     };
 
-    askCode( mobileNumber )
-      .then( function( result ){
-        console.log('askCode result = ', result );
-        res.json( result );  
-      })
-      .fail( function( error ) {
-        console.log('askCode fail : ', error );
-        ret.val = error;
-        res.json( ret );
-      });
+    if( !mobileNumber ) {
+      console.log('mobileNumber is undefined.' );
+      ret.msg = 'mobileNumber is undefined.';
+      res.json( ret );
+    }
+    else {
+      askCode( mobileNumber )
+        .then( function( result ){
+          console.log('askCode result = ', result );
+          res.json( result );  
+        })
+        .fail( function( error ) {
+          console.log('askCode fail : ', error );
+          ret.val = error;
+          res.json( ret );
+        });
+    }
+    
   },
 
 	searchCodes: function(req, res, next){
