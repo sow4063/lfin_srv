@@ -65,6 +65,17 @@ function addKey( keyInf, callback ) {
 
 module.exports = {
 
+  getAppkey: function( req, res, next ) {
+    var ret = {
+      pub: rsapubkey,
+      pri: rsaprikey
+    };
+
+    console.log('getAppkey => ', req.body.mobileNumber );
+
+    res.json( ret );
+  },
+
   getAESKey: function( req, res, next ) {
 
     var ret = {
