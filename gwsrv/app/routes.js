@@ -10,6 +10,7 @@ module.exports = function(app) {
 	// authentication routes
 	app.post('/verify', userConfirmController.verifyUser );
 	
+
 	// frontend routes =========================================================
 	// route to handle all angular requests
 	// app.get('*', function(req, res) {
