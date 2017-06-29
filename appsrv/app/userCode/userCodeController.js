@@ -122,7 +122,8 @@ module.exports = {
 
   getCode: function( req, res, next ) {
 
-    var mobileNumber = req.body.mobileNumber;
+    //var mobileNumber = req.body.mobileNumber;
+    var mobileNumber = req.query.mobileNumber;
 
     console.log('getCode mobileNumber = ', mobileNumber );
 
