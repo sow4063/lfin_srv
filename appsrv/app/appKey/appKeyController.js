@@ -89,6 +89,7 @@ module.exports = {
       ret.code = 121;
       ret.msg = '사용자의 RSA key가 존재하지 않습니다.';
       res.json( ret );  
+      return;
     }
     
     // generate aes key for the client
@@ -189,8 +190,15 @@ module.exports = {
       val: ''
     };
 
-    //console.log('insertRSAKey req.body ===>>> ', req.body );
-    //console.log('insertRSAKey req.query ===>>> ', req.query );
+    var rsakey = req.body.rsakey;
+    var mobileNumber = req.body.mobileNumber;
+
+    if( !mobileNumber || !rsakey ) {
+      ret.code = 122;
+      ret.msg = 'mobileNumber or rsakey is undefined.';
+      res.json( ret );  
+      return;
+    }
 
     var keyinf = {};
 

@@ -176,7 +176,8 @@ module.exports = {
       });
 	},
 
-  removeCodes: function(req, res, next){
+  removeCodes: function( req, res, next ) {
+    
     removeUserCodes({mobileNumber: req.query.keyword})
       .then(function(result){
         console.log('UserCode removed successfully.');
