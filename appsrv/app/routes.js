@@ -17,11 +17,13 @@ module.exports = function(app) {
   });
 
   app.get('/Code2.lfin', codeController.getCode );
-  app.post('/Code', codeController.getCode );
-  app.get('/AESKey', appKeyController.getAESKey );
   app.get('/appkey', appKeyController.getAppkey );
   app.get('/Policy', policyController.searchPolicy );
 
+  app.post('/Code', codeController.getCode );
+  app.post('/AESKey', appKeyController.getAESKey );
+  
+  
 	app.post('/RSAKey', appKeyController.insertRSAKey );
 	app.post('/insertPolicy', policyController.insertPolicy );
 	app.post('/insertCode', codeController.insertCode );
