@@ -12,19 +12,13 @@ module.exports = function(app) {
 	var result = appKeyController.makeRSAKey();
 	console.log('result of makeRSAKey', result );
 
-  app.get('/', function(req, res, next ) {
-    res.json( {ret: 'return from appserver/'});
-  });
-
-  app.get('/Code2.lfin', codeController.getCode );
   app.get('/appkey', appKeyController.getAppkey );
-  app.get('/Policy', policyController.searchPolicy );
+  app.get('/policy', policyController.searchPolicy );
 
-  app.post('/Code', codeController.getCode );
-  app.post('/AESKey', appKeyController.getAESKey );
-  
-  
-	app.post('/RSAKey', appKeyController.insertRSAKey );
+  app.post('/code', codeController.getCode );
+  app.post('/aes', appKeyController.getAESKey );
+  app.post('/rsa', appKeyController.insertRSAKey );
+	
 	app.post('/insertPolicy', policyController.insertPolicy );
 	app.post('/insertCode', codeController.insertCode );
 
