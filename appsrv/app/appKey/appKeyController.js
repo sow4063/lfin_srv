@@ -28,6 +28,7 @@ var tls = require('tls');
 var fs = require('fs');
 
 var server = process.env.HOST || 'www.fordicpro.com';
+//var server = process.env.HOST || 'www.fordicpw.com';
 var port = process.env.PORT || 8100;
 
 var sslPath = '/etc/letsencrypt/live/www.fordicpro.com/';
@@ -120,6 +121,8 @@ module.exports = {
 
             var clientKey = new NodeRSA( rsaKey.key );
             var encrypted = clientKey.encrypt( aesKey, 'base64', 'utf8' );
+
+            console.log('rsaKey.key ==>> ',  rsaKey.key );
             
             var serverKey = new NodeRSA( rsaprikey );
             var send = serverKey.encryptPrivate( encrypted, 'base64', 'utf8' );
