@@ -130,9 +130,8 @@ module.exports = {
             console.log('encrypted ==>> ', encrypted );
             console.log('send ==>> ', send );
             
-            //ret.val = send;
-            ret.val = encrypted;
-
+            ret.val = send;
+            
             res.json( ret );
           })
           .fail( function( error ) {
