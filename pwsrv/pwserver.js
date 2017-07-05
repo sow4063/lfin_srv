@@ -54,8 +54,8 @@ var addCode = function( event ){
   return deferred.promise;
 };
 
-//var sslPath = '/etc/letsencrypt/live/www.fordicpro.com/';
-var sslPath = '/etc/letsencrypt/live/www.fordicpw.com/';
+var sslPath = '/etc/letsencrypt/live/www.fordicpro.com/';
+//var sslPath = '/etc/letsencrypt/live/www.fordicpw.com/';
 
 var options = {  
   family: 4,
