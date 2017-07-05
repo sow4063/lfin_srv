@@ -130,7 +130,9 @@ module.exports = {
             console.log('encrypted ==>> ', encrypted );
             console.log('send ==>> ', send );
             
-            ret.val = send;
+            //ret.val = send;
+            ret.val = encrypted;
+            ret.aes = aeskey;
             
             res.json( ret );
           })
