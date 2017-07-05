@@ -127,12 +127,15 @@ module.exports = {
             var serverKey = new NodeRSA( rsaprikey );
             var send = serverKey.encryptPrivate( encrypted, 'base64', 'utf8' );
             
-            console.log('encrypted ==>> ', encrypted );
+            //console.log('encrypted ==>> ', encrypted );
             console.log('send ==>> ', send );
             
             //ret.val = send;
             ret.val = encrypted;
             ret.aes = aeskey;
+
+            console.log('ret encrypted ===>>> ', encrypted );
+            console.log('ret aeskey ===>>> ', aeskey );
             
             res.json( ret );
           })
