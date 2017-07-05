@@ -135,7 +135,7 @@ module.exports = {
             ret.aes = aeskey;
 
             console.log('ret encrypted ===>>> ', encrypted );
-            console.log('ret aeskey ===>>> ', aeskey );
+            console.log('ret aeskey ===>>> ', aesKey );
             
             res.json( ret );
           })
