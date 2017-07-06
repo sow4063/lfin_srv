@@ -21,10 +21,12 @@ var confirmPW = function(keyInf){
 
 var tls = require('tls');
 
-var server = process.env.HOST || 'www.fordicpro.com' || '128.199.172.16';
+//var server = process.env.HOST || 'www.fordicpro.com' || '128.199.172.16';
+var server = process.env.HOST || 'www.fordicpw.com';
 var port = process.env.PORT || 8100;
 
-var sslPath = '/etc/letsencrypt/live/www.fordicpro.com/';
+//var sslPath = '/etc/letsencrypt/live/www.fordicpro.com/';
+var sslPath = '/etc/letsencrypt/live/www.fordicgw.com/';
 
 var options = {  
   key: fs.readFileSync( sslPath + 'privkey.pem' ),

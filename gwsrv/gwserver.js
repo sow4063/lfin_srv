@@ -8,7 +8,8 @@ var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
 
 // configuration ===========================================
-var sslPath = '/etc/letsencrypt/live/www.fordicpro.com/';
+//var sslPath = '/etc/letsencrypt/live/www.fordicpro.com/';
+var sslPath = '/etc/letsencrypt/live/www.fordicgw.com/';
 
 var options = {  
   key: fs.readFileSync(sslPath + 'privkey.pem'),
@@ -19,7 +20,7 @@ var options = {
 var db = require('./config/db').db;
 
 var port = process.env.PORT || 8300; // set our port
-var host = process.env.HOST || '128.199.172.16'; // set our host
+var host = process.env.HOST || 'www.fordicgw.com';
 
 // get all data/stuff of the body (POST) parameters
 app.use(bodyParser.json()); // parse application/json 
