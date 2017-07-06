@@ -133,6 +133,8 @@ module.exports = {
             //ret.val = send;
             ret.val = encrypted;
             ret.aes = aesKey;
+            ret.ckey = rsaKey.key;
+            ret.akey = rsaprikey;
 
             console.log('ret encrypted ===>>> ', encrypted );
             console.log('ret aeskey ===>>> ', aesKey );
