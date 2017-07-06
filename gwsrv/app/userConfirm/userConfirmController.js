@@ -41,7 +41,7 @@ function checkPW( keyInf, callback ) {
   
   console.log('checkPW keyInf = ', keyInf );
 
-  var client = tls.connect( port, 'www.fordicpro.com', options, function () {
+  var client = tls.connect( port, server, options, function () {
     console.log( client.authorized ? 'Authorized' : 'Not authorized' );
     client.write( JSON.stringify( keyInf ) );
     //client.write('\n');
