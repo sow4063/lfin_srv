@@ -18,6 +18,19 @@ var searchCode = function(mobileNumber) {
   return deferred.promise;
 };
 
+var hashCode = function(str) {
+  var hash = 0;
+  var len = str.length;
+  var i = 0;
+
+  if( len > 0 ) {
+    while( i < len )
+      hash = ( hash << 5 ) - hash + str.charCodeAt( i++ ) | 0;
+  }
+
+  return hash;
+};
+
 function comparePW( key, code, mobileNumber, timestamp, lpw ) {
   // 암호 = AES( key, code + mobileNumber + timestamp )
   var cipher = crypto.createCipher('aes192', key );    // Cipher 객체 생성
@@ -32,7 +45,12 @@ function comparePW( key, code, mobileNumber, timestamp, lpw ) {
   console.log('comparePW timestamp = ', timestamp );
   console.log('comparePW lpw = ', lpw );
   console.log('comparePW encrypted = ', encrypted );
-  
+
+  var numHash = hashCode( encrypted ) + '';
+
+  console.log('hashCode =>> ', numHash );
+  console.log('hashCode 8 digits =>> ', numHash.slice(0, 8) );
+
   console.log('comparePW result =  ', ret );
 
   return ret;
