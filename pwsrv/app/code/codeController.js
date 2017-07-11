@@ -40,6 +40,40 @@ function makeCode( bsid ) {
   return code;
 };
 
+function sendUserCode( codes ) {
+
+  console.log('codes.length => ', codes.length );
+
+  var postData = {
+    'codes': codes
+  };
+
+  var headersOpt = {  
+    'content-type': 'application/json'
+  };
+
+  var url = 'https://www.fordicpro.com:8200/updateCodes';
+
+  var options = {
+    method: 'post',
+    form: postData, // Javascript object
+    json: true, // Use,If you are sending JSON data
+    url: url,
+    headers: headersOpt
+  };
+
+  request( options, function( err, res, body ) {
+    if( err ) {
+      console.log('Error :', err );
+    }
+    else {
+      console.log(' Body :', body );  
+    }
+
+  });
+
+};
+
 module.exports = {
 
   insertCode: function( event, callback ) {
@@ -139,6 +173,8 @@ module.exports = {
         var localtime = now.toLocaleTimeString().replace(/[\:]/g, '');
         var current = jsonDate + localtime;
 
+        var sendCodes = [];
+
         for( var i = 0; i < codes.length; i ++ ) {
           var obj = {};
         
@@ -146,6 +182,8 @@ module.exports = {
           obj.bsid = codes[i].bsid;
           obj.code = makeCode( obj.bsid );
           obj.updateDate = current;
+
+          sendCodes.push( obj );
 
           updateCode( codes[i], obj )
             .then(function(result){
@@ -155,6 +193,9 @@ module.exports = {
               console.log('Error on updateCode = ', i, error );
             });
         }
+
+        // send updated user code to appserver by https request
+        sendUserCode( sendCodes );
         
       })
       .fail(function(error){

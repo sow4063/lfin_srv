@@ -5,10 +5,18 @@ var mongoose = require('mongoose');
 // module.exports allows us to pass this to other files when it is called
 var UserCodeSchema = new mongoose.Schema({
   mobileNumber : {
-  	type : String, required: true
-  },
+		type : String, required: true
+	},
+	
+  bsid : {
+		type : String, required: true
+	},
 
 	code : {
+		type : String, required: true
+	},
+
+	updateDate : {
 		type : String, default: ''
 	}
 

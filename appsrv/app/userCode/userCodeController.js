@@ -190,29 +190,16 @@ module.exports = {
       });
   },
 
-  updateCodes: function (req, res, next) {
+  updateCodes: function( req, res, next ) {
 
-    var codes = req.body.codes;
+    console.log('the codes length = ', req.body.codes.length );
 
-    var codeArr = [];
-      
-    for( var i = 0; i < codes.length; i++ ){
-      var newCode = {};
-
-      newCode['mobileNumber'] = codes[i][0];         
-      newCode['code'] = codes[i][1];
-
-      codeArr.push( newCode );
-    }
-    
-    console.log('the codes length = ', codeArr.length );
-
-    updateUserCode( codeArr, { upsert: true, multi: true }  )
-      .then(function(result){
+    updateUserCode( req.body.codes, { upsert: true, multi: true }  )
+      .then( function( result ) {
         console.log('the codes created successfully.');
         res.json( result.length );
       })
-      .fail(function(err){
+      .fail( function( err ) {
         console.log('create UserCode Error.', err);
         res.json( error );
       }); 
