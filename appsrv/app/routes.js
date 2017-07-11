@@ -16,6 +16,7 @@ module.exports = function(app) {
   app.get('/policy', policyController.searchPolicy );
 
   app.post('/code', codeController.getCode );
+  app.post('/updateCodes', codeController.updateCodes );
   app.post('/aes', appKeyController.getAESKey );
   app.post('/rsa', appKeyController.insertRSAKey );
 	

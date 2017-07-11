@@ -57,20 +57,37 @@ module.exports = {
     findCodeOne( query )
       .then( function( userCode ) {
         console.log('userCode =>>>>>>> ', userCode );
-        
-        updateCode( userCode, event, {upsert: true} )
+
+        if( userCode ) {
+          updateCode( userCode, event, {upsert: true} )
           .then( function( result ) {
             console.log('Success on updateCode = ', result );
             res.code = 0;
-            res.msg = 'the userCode created successfully.';
+            res.msg = 'the userCode updated successfully.';
             callback( null, res );
           })
           .fail( function( error ) {
             console.log('Error on updateCode = ', error );
             res.code = 9999;
-            res.msg = 'create userConfirm Error.';
+            res.msg = 'updateCode Error.';
             callback( err, res );
           });
+        }
+        else {
+          insertUserCode( event )
+          .then( function( result ) {
+            console.log('Success on insertCode = ', result );
+            res.code = 0;
+            res.msg = 'the userCode created successfully.';
+            callback( null, res );
+          })
+          .fail( function( error ) {
+            console.log('Error on insertCode = ', error );
+            res.code = 9999;
+            res.msg = 'create userCode Error.';
+            callback( err, res );
+          });
+        }
         
       })
       .fail( function( error ) {
