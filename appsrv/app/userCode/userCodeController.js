@@ -205,7 +205,7 @@ module.exports = {
     //     res.json( err );
     //   }); 
 
-    removeUserCode( {} )
+    removeUserCodes( {} )
       .then( function( result ) {
 
         insertCodes( req.body.codes )
