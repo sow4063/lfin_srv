@@ -2,6 +2,7 @@ var Q = require('q');
 var Code = require('./codeModel.js');
 var randomstring = require("randomstring");
 var crypto = require("crypto");
+var request = require('request');
 
 // Promisify a few mongoose methods with the `q` promise library
 var updateCode = Q.nbind( Code.update, Code );
