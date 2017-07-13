@@ -3,9 +3,9 @@ var Q = require('q');
 var UserCode = require('./userCodeModel.js');
 
 // Promisify a few mongoose methods with the `q` promise library
-var findUserCodes = Q.nbind(UserCode.find, UserCode);
-var updateUserCode = Q.nbind(UserCode.update, UserCode);
-var removeUserCodes = Q.nbind(UserCode.remove, UserCode);
+var findUserCodes = Q.nbind( UserCode.find, UserCode );
+var updateUserCode = Q.nbind( UserCode.updateMany, UserCode );
+var removeUserCodes = Q.nbind( UserCode.remove, UserCode );
 
 var askCode = function( mobileNumber ) {
   var deferred = Q.defer();
