@@ -4,8 +4,9 @@ var UserCode = require('./userCodeModel.js');
 
 // Promisify a few mongoose methods with the `q` promise library
 var findUserCodes = Q.nbind( UserCode.find, UserCode );
-var updateUserCode = Q.nbind( UserCode.updateMany, UserCode );
+var updateUserCode = Q.nbind( UserCode.update, UserCode );
 var removeUserCodes = Q.nbind( UserCode.remove, UserCode );
+var insertCodes = Q.nbind( UserCode.create, UserCode );
 
 var askCode = function( mobileNumber ) {
   var deferred = Q.defer();
@@ -194,10 +195,29 @@ module.exports = {
 
     console.log('the codes length = ', req.body.codes.length );
 
-    updateUserCode( req.body.codes, { upsert: true, multi: true }  )
+    // updateUserCode( req.body.codes, { upsert: true, multi: true }  )
+    //   .then( function( result ) {
+    //     console.log('the codes updated successfully.');
+    //     res.json( result.length );
+    //   })
+    //   .fail( function( err ) {
+    //     console.log('updateCodes Error.', err );
+    //     res.json( err );
+    //   }); 
+
+    removeUserCode( {} )
       .then( function( result ) {
-        console.log('the codes updated successfully.');
-        res.json( result.length );
+
+        insertCodes( req.body.codes )
+          .then( function( output ) {
+            console.log('the codes updated successfully.');
+            res.json( output );
+          })
+          .fail( function( err ) {
+            console.log('error on updated user codes.');
+            res.json( err );
+          })
+        
       })
       .fail( function( err ) {
         console.log('updateCodes Error.', err );
