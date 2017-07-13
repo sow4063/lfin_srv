@@ -37,7 +37,7 @@ function comparePW( key, code, mobileNumber, timestamp, lpw ) {
   cipher.update( code + mobileNumber + timestamp, 'utf8', 'base64' );      // 인코딩 방식에 따라 암호화
   var encrypted = cipher.final('base64');              // 암호화된 결과 값
 
-  var ret = ( lpw == encrypted );
+  //var ret = ( lpw == encrypted );
 
   console.log('comparePW key = ', key );
   console.log('comparePW code = ', code );
@@ -47,9 +47,12 @@ function comparePW( key, code, mobileNumber, timestamp, lpw ) {
   console.log('comparePW encrypted = ', encrypted );
 
   var numHash = hashCode( encrypted ) + '';
-
   console.log('hashCode =>> ', numHash );
-  console.log('hashCode 8 digits =>> ', numHash.slice(0, 8) );
+
+  numHash = numHash.slice(-8);
+  console.log('hashCode 8 digits =>> ', numHash );
+
+  var ret = ( lpw == numHash );
 
   console.log('comparePW result =  ', ret );
 

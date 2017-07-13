@@ -196,11 +196,11 @@ module.exports = {
 
     updateUserCode( req.body.codes, { upsert: true, multi: true }  )
       .then( function( result ) {
-        console.log('the codes created successfully.');
+        console.log('the codes updated successfully.');
         res.json( result.length );
       })
       .fail( function( err ) {
-        console.log('create UserCode Error.', err);
+        console.log('updateCodes Error.', err);
         res.json( error );
       }); 
     
