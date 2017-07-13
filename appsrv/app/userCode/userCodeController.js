@@ -200,8 +200,8 @@ module.exports = {
         res.json( result.length );
       })
       .fail( function( err ) {
-        console.log('updateCodes Error.', err);
-        res.json( error );
+        console.log('updateCodes Error.', err );
+        res.json( err );
       }); 
     
   }
