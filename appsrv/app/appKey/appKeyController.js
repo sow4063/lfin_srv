@@ -3,6 +3,7 @@ var Q = require('q');
 var NodeRSA = require('node-rsa');
 var AppKey = require('./appKeyModel.js');
 var randomstring = require("randomstring");
+var crypto = require("crypto");
 
 var rsapubkey = '';
 var rsaprikey = '';
@@ -99,12 +100,12 @@ module.exports = {
     //   charset: 'alphanumeric'
     // });
 
-    function getKey() {
+    function generateAESKey() {
       var buffer = crypto.randomBytes(24);
       return buffer.toString('hex');
     };
 
-    var aesKey = getKey();
+    var aesKey = generateAESKey();
 
     var keyinf = {};
     
