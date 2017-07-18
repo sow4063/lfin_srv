@@ -94,10 +94,17 @@ module.exports = {
     }
     
     // generate aes key for the client
-    var aesKey = randomstring.generate({
-      length: 24,
-      charset: 'alphanumeric'
-    });
+    // var aesKey = randomstring.generate({
+    //   length: 24,
+    //   charset: 'alphanumeric'
+    // });
+
+    function getKey() {
+      var buffer = crypto.randomBytes(24);
+      return buffer.toString('hex');
+    };
+
+    var aesKey = getKey();
 
     var keyinf = {};
     
