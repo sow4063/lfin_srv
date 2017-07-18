@@ -95,7 +95,7 @@ module.exports = {
     
     // generate aes key for the client
     var aesKey = randomstring.generate({
-      length: 6,
+      length: 24,
       charset: 'alphanumeric'
     });
 
