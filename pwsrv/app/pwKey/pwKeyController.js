@@ -34,13 +34,25 @@ var hashCode = function(str) {
 function comparePW( key, code, mobileNumber, timestamp, lpw ) {
   // 암호 = AES( key, code + mobileNumber + timestamp )
   //var cipher = crypto.createCipher('aes192', key );    // Cipher 객체 생성
-  var cipher = crypto.createCipher('aes256', key );    // Cipher 객체 생성
-  var encrypted = cipher.update( code + mobileNumber + timestamp, 'utf8', 'base64' );      // 인코딩 방식에 따라 암호화
-  encrypted += cipher.final('base64');              // 암호화된 결과 값
+  // var cipher = crypto.createCipher('aes256', key );    // Cipher 객체 생성
+  // var encrypted = cipher.update( code + mobileNumber + timestamp, 'utf8', 'base64' );      // 인코딩 방식에 따라 암호화
+  // encrypted += cipher.final('base64');              // 암호화된 결과 값
 
-  //var ret = ( lpw == encrypted );
+  var AESMODE = 'aes-192-ecb';
+
+  var msg = code + mobileNumber + timestamp;
+
+  var iv = new Buffer('');
+  
+  var cipherkey = new Buffer( key, 'hex' );
+
+  var cipher = crypto.createCipheriv( AESMODE, cipherkey, iv );
+  
+  var encrypted = cipher.update( new Buffer( msg, 'utf8'), 'buffer', 'base64');
+  encrypted += cipher.final('base64');
 
   console.log('comparePW key = ', key );
+  console.log('comparePW cipherkey = ', cipherkey );
   console.log('comparePW code = ', code );
   console.log('comparePW mobileNumber = ', mobileNumber );
   console.log('comparePW timestamp = ', timestamp );
