@@ -152,9 +152,12 @@ module.exports = {
             res.json( ret );
           })
           .fail( function( error ) {
+            console.log('Error On Find the mobileNumber => ', error );
             ret.code = 510;
             ret.msg = 'DB서버 접속 오류가 발생했습니다.';
             ret.val = error;
+
+            res.json( ret );
           });
         
       })
