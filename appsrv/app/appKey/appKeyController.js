@@ -67,6 +67,69 @@ function addKey( keyInf, callback ) {
 
 module.exports = {
 
+  getAES: function(req, res) {
+    var ret = {
+      code: -1,
+      msg: 'ng'
+    };
+
+    var mobileNumber = req.body.mobileNumber;
+    
+    if( !mobileNumber ) {
+      ret.code = 121;
+      ret.msg = '사용자의 RSA key가 존재하지 않습니다.';
+      res.json( ret );  
+      return;
+    }
+
+    function generateAESKey() {
+      var buffer = crypto.randomBytes(24);
+      return buffer.toString('hex');
+    };
+
+    var aesKey = generateAESKey();
+
+    var keyinf = {};
+    
+    keyinf['key'] = aesKey;
+    keyinf['keyType'] = 'aes';
+    keyinf['mobileNumber'] = mobileNumber;
+
+    console.log('sendAESKey input = ', keyinf );
+
+    // return the key to the client
+    findKeyOne( { 'mobileNumber': mobileNumber } )
+      .then( function( rsaKey ) {
+
+        var clientKey = new NodeRSA( rsaKey.key );
+        var encrypted = clientKey.encrypt( aesKey, 'base64', 'utf8' );
+
+        console.log('rsaKey.key ==>> ',  rsaKey.key );
+        
+        var serverKey = new NodeRSA( rsaprikey );
+        var send = serverKey.encryptPrivate( encrypted, 'base64', 'utf8' );
+        
+        ret.code = 0;
+        ret.msg = 'AES test result';
+        ret.val = send;
+
+        console.log('END OF getAES ==>> ', send );
+        
+        res.json( ret );
+      })
+      .fail( function( error ) {
+        
+        console.log('Error On Find the mobileNumber => ', error );
+
+        ret.code = 510;
+        ret.msg = 'DB서버 접속 오류가 발생했습니다.';
+        ret.val = error;
+
+        res.json( ret );
+      });
+
+  },
+
   getAppkey: function( req, res, next ) {
     var ret = {
       pub: rsapubkey,

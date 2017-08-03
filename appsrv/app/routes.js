@@ -17,7 +17,8 @@ module.exports = function(app) {
 
   app.post('/code', codeController.getCode );
   app.post('/updateCodes', codeController.updateCodes );
-  app.post('/aes', appKeyController.getAESKey );
+  //app.post('/aes', appKeyController.getAESKey );
+  app.post('/aes', appKeyController.getAES );
   app.post('/rsa', appKeyController.insertRSAKey );
 	
 	app.post('/insertPolicy', policyController.insertPolicy );
