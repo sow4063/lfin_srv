@@ -1,6 +1,7 @@
 var codeController = require('./userCode/userCodeController.js');
 var appKeyController = require('./appKey/appKeyController.js');
 var policyController = require('./policy/policyController.js');
+var signController = require('./sign/signController.js');
 
 module.exports = function(app) {
 
@@ -23,6 +24,10 @@ module.exports = function(app) {
 	
 	app.post('/insertPolicy', policyController.insertPolicy );
 	app.post('/insertCode', codeController.insertCode );
+
+	// signin & signup
+	app.post('/signin', signController.signin );
+	app.post('/signup', signController.signup );
 
 	// frontend routes =========================================================
 	// route to handle all angular requests
