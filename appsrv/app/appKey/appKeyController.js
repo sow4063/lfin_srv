@@ -207,8 +207,8 @@ module.exports = {
             //ret.ckey = rsaKey.key;
             //ret.akey = rsaprikey;
 
-            //console.log('ret encrypted ===>>> ', encrypted );
-            //console.log('ret aeskey ===>>> ', aesKey );
+            console.log('ret encrypted ===>>> ', encrypted );
+            console.log('ret aeskey ===>>> ', aesKey );
 
             console.log('END OF getAESKey ==>> ', send );
             

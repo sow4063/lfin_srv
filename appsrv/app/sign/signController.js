@@ -33,8 +33,8 @@ module.exports = {
       .then( function( user ) {
         if( user ) {
           return updateUser( {'mobileNumber': mobileNumber, 'email': email, 'password': password} )
-            .then( function( updatedUser ) {
-              console.log('updatedUser => ', updateUser );
+            .then( function( modifiedUser ) {
+              console.log('modifiedUser => ', modifiedUser );
               handleResult( 810, '사용자 정보를 수정했습니다.', res );
             })
             .fail( function( error ) {
