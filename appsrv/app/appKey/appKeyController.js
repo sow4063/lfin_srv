@@ -112,7 +112,7 @@ module.exports = {
         ret.code = 0;
         ret.msg = 'AES test result';
         ret.val = send;
-
+        
         console.log('END OF getAES ==>> ', send );
         
         res.json( ret );
@@ -201,8 +201,8 @@ module.exports = {
             //console.log('encrypted ==>> ', encrypted );
             //console.log('send ==>> ', send );
             
-            ret.val = send;
-            //ret.val = encrypted;
+            //ret.val = send;
+            ret.val = encrypted;
             //ret.aes = aesKey;
             //ret.ckey = rsaKey.key;
             //ret.akey = rsaprikey;
