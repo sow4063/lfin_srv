@@ -10,6 +10,30 @@ var findCode = Q.nbind( Code.find, Code );
 var findCodeOne = Q.nbind( Code.findOne, Code );
 var insertUserCode = Q.nbind( Code.create, Code );
 
+function makeCode36( bsid ) {
+  // generate 18 bytes according to bsid
+  var len = 18 - ('' + bsid ).length;
+
+  var priCode = randomstring.generate({
+    length: len,
+    charset: 'alphanumeric'
+  });
+
+  priCode += bsid; // 18
+  
+  console.log( 'priCode = ', priCode, priCode.length );
+  
+  // create the hash value with SHA256
+  var hash = crypto.createHash('SHA256').update(priCode, 'utf8').digest('base64').slice(-18); // 18
+
+  var code = priCode + hash;
+  
+  console.log('hash = ', hash, hash.length );
+  console.log('code = ', code, code.length );
+
+  return code;
+};
+
 function makeCode( bsid ) {
   // generate 120 bytes according to bsid
   var len = 120 - ('' + bsid ).length;
@@ -181,7 +205,8 @@ module.exports = {
         
           obj.mobileNumber = codes[i].mobileNumber;
           obj.bsid = codes[i].bsid;
-          obj.code = makeCode( obj.bsid );
+          //obj.code = makeCode( obj.bsid );
+          obj.code = makeCode36( obj.bsid );
           obj.updateDate = current;
 
           sendCodes.push( obj );
