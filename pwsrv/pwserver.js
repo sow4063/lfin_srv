@@ -36,16 +36,27 @@ var insertAES = function( event ) {
 var codeController = require('./app/code/codeController.js');
 var intervalObj = setInterval( codeController.updateCode, 1000 * 3600 );
 
-var findCode = function( event ){
+var tauController = require('./app/tau/tauController.js');
+
+var findCode = function( mobileNumber, loc ) {
   var deferred = Q.defer();
-  codeController.searchCode( event, function( error, result ) {
-    if( error ) deferred.reject( new Error( error ) );
-    else deferred.resolve( result );
-  });
+
+  if( loc ) {
+    tauController.searchCode( loc, function( error, result ) {
+      if( error ) deferred.reject( new Error( error ) );
+      else deferred.resolve( result );
+    });
+  }
+  else {
+    codeController.searchCode( mobileNumber, function( error, result ) {
+      if( error ) deferred.reject( new Error( error ) );
+      else deferred.resolve( result );
+    });  
+  }
   return deferred.promise;
 };
 
-var addCode = function( event ){
+var addCode = function( event ) {
   var deferred = Q.defer();
   codeController.insertCode( event, function( error, result ) {
     if( error ) deferred.reject( new Error( error ) );
@@ -111,7 +122,7 @@ const server = tls.createServer( options, (socket) => {
         });
     } // msgid = 20 
     else if( received.msgid === '30' ) {
-      findCode( received.mobileNumber )
+      findCode( received.mobileNumber, received.loc )
         .then( function( result ) {
           reply.code = 0;
           reply.msg = '기본코드 요청에 성공했습니다.';

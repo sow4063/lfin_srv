@@ -8,10 +8,10 @@ var updateUserCode = Q.nbind( UserCode.update, UserCode );
 var removeUserCodes = Q.nbind( UserCode.remove, UserCode );
 var insertCodes = Q.nbind( UserCode.create, UserCode );
 
-var askCode = function( mobileNumber ) {
+var askCode = function( mobileNumber, loc ) {
   var deferred = Q.defer();
 
-  requestCode( mobileNumber, function( error, result ) {
+  requestCode( mobileNumber, loc, function( error, result ) {
     if( error ) deferred.reject( new Error( error ) );
     else deferred.resolve( result );
   });
@@ -44,12 +44,13 @@ var options = {
   cert: fs.readFileSync(sslPath + 'fullchain.pem')
 };
 
-function requestCode( mobileNumber, callback ) {
+function requestCode( mobileNumber, loc, callback ) {
 
   // add appkey to the LPW PWServer.
   var obj = {};
   obj['msgid'] = '30';
   obj['mobileNumber'] = mobileNumber;
+  obj['loc'] = loc;
   
   console.log('requesetCode obj = ', obj );
 
@@ -125,8 +126,10 @@ module.exports = {
   getCode: function( req, res, next ) {
 
     var mobileNumber = req.body.mobileNumber;
+    var loc = req.body.loc;
     
     console.log('getCode mobileNumber = ', mobileNumber );
+    console.log('getCode loc = ', loc );
 
     var ret = {
       code: 100,
@@ -139,7 +142,7 @@ module.exports = {
       res.json( ret );
     }
     else {
-      askCode( mobileNumber )
+      askCode( mobileNumber, loc )
         .then( function( result ){
           console.log('askCode result = ', result );
           res.json( result );  

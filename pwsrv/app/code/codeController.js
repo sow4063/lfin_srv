@@ -3,6 +3,7 @@ var Code = require('./codeModel.js');
 var randomstring = require("randomstring");
 var crypto = require("crypto");
 var request = require('request');
+var Tau = require('../tau/tauController.js');
 
 // Promisify a few mongoose methods with the `q` promise library
 var updateCode = Q.nbind( Code.update, Code );
@@ -181,7 +182,7 @@ module.exports = {
         console.log('error on findCodeOne =>> ', error );
         callback( error );
       });
-
+    
   },
 
   updateCode: function() {
