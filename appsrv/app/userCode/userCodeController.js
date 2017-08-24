@@ -1,6 +1,7 @@
 var fs = require('fs');
 var Q = require('q');
 var UserCode = require('./userCodeModel.js');
+var crypto = require("crypto");
 
 // Promisify a few mongoose methods with the `q` promise library
 var findUserCodes = Q.nbind( UserCode.find, UserCode );
@@ -98,7 +99,66 @@ function insertCode( codeinf, callback ) {
 
 };
 
+var hashCode = function( str ) {
+  var hash = 0;
+  var len = str.length;
+  var i = 0;
+
+  if( len > 0 ) {
+    while( i < len )
+      hash = ( hash << 5 ) - hash + str.charCodeAt( i++ ) | 0;
+  }
+
+  return hash;
+};
+
 module.exports = {
+
+  testaes : function( req, res ) {
+
+    var lpw = req.body.password;
+
+    var AESMODE = 'aes-192-ecb';
+
+    var msg = 'swp6HFzCJJ3g123456ZLUUq+qDYqu3w1+D4=' + '01051999026' + '201708241650';
+
+    var iv = new Buffer('');
+    
+    var cipherkey = new Buffer( '33318d24c0c8761f97457e6428a9958eb117d3b472f1ba43', 'hex' );
+
+    var cipher = crypto.createCipheriv( AESMODE, cipherkey, iv );
+    
+    var encrypted = cipher.update( new Buffer( msg, 'utf8'), 'buffer', 'base64');
+    encrypted += cipher.final('base64');
+
+    //console.log('comparePW key = ', key );
+    console.log('comparePW cipherkey = ', cipherkey );
+    console.log('comparePW lpw = ', lpw );
+    console.log('comparePW encrypted = ', encrypted );
+
+    var numHash = hashCode( encrypted ) + '';
+    console.log('hashCode =>> ', numHash );
+
+    numHash = numHash.slice(-8);
+    console.log('hashCode 8 digits =>> ', numHash );
+
+    var ret = ( lpw == numHash );
+
+    var result = {};
+
+    if( ret ) {
+      result.code = 0;
+      result.msg = '인증 암호 검증에 성공했습니다.';
+    }
+    else {
+      result.code = -1;
+      result.msg = '인증 암호 검증에 실패했습니다.';
+    }
+
+    console.log('comparePW result =  ', result );
+    
+    res.json( result );
+  },
 
   insertCode: function( req, res, next ) {
 

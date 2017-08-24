@@ -30,6 +30,8 @@ module.exports = function(app) {
 	app.post('/signup', signController.signup );
 	app.post('/updateSign', signController.updateSign );
 
+	app.post('/testaes', codeController.testaes );
+
 	// frontend routes =========================================================
 	// route to handle all angular requests
 	// app.get('*', function(req, res) {
