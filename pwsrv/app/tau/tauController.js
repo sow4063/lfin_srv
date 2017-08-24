@@ -38,7 +38,7 @@ module.exports = {
 
 	searchCode: function( loc, callback ) {
 
-    console.log('searchCode = ', loc );
+    console.log('searchCode loc = ', loc );
 
     var query = {};
     query['tau'] = loc;
@@ -46,13 +46,13 @@ module.exports = {
     findTauOne( query )
       .then( function( bsid ) {
         
-        console.log('bsid =>>>>>>> ', bsid );
+        console.log('searchCode bsid = ', bsid );
 
         if( bsid ) {
           // make code with the bsid
           let code = makeCode36( bsid );
           
-          console.log('code = ', code);
+          console.log('searchCode code = ', code);
           
           callback( null, code );
         } 

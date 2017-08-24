@@ -2,6 +2,7 @@ var Q = require('q');
 var PWKey = require('./pwKeyModel.js');
 var codeModel = require('../code/codeModel.js');
 var codeController = require('../code/codeController.js');
+var tauController = require('../tau/tauController.js');
 var crypto = require("crypto");
 
 // Promisify a few mongoose methods with the `q` promise library
@@ -9,16 +10,26 @@ var createKey = Q.nbind( PWKey.create, PWKey );
 var removeKey = Q.nbind( PWKey.remove, PWKey );
 var findKey   = Q.nbind( PWKey.findOne, PWKey );
 
-var searchCode = function(mobileNumber) {
+var searchCode = function( mobileNumber, loc ) {
   var deferred = Q.defer();
-  codeController.searchCode( mobileNumber, function(error, result) {
-    if (error) deferred.reject(new Error(error));
-    else deferred.resolve(result);
-  });
+
+  if( loc ) {
+    tauController.searchCode( loc, function( error, result ) {
+      if( error ) deferred.reject( new Error( error ) );
+      else deferred.resolve( result );
+    });
+  }
+  else {
+    codeController.searchCode( mobileNumber, function( error, result ) {
+      if( error ) deferred.reject( new Error( error ) );
+      else deferred.resolve( result );
+    });
+  }
+  
   return deferred.promise;
 };
 
-var hashCode = function(str) {
+var hashCode = function( str ) {
   var hash = 0;
   var len = str.length;
   var i = 0;
@@ -81,13 +92,14 @@ module.exports = {
     };
 
     findKey( event.mobileNumber )
-      .then( function(pwKey) {
+      .then( function( pwKey ) {
+        
         var aeskey = pwKey.key;
         console.log('aes key is exist = ', aeskey );
 
         // get the code
-        searchCode( event.mobileNumber )
-          .then(function(result){
+        searchCode( event.mobileNumber, event.loc )
+          .then( function( result ) {
             var code = result;
             
             console.log('searchCode = ', code );
@@ -105,7 +117,7 @@ module.exports = {
 
             callback( null, res );
           })
-          .fail(function(error){
+          .fail(function( error ) {
             console.log('fail to create code = ', error );
             res.code = '700';
             res.msg = '해당 사용자의 위치 정보가 없습니다.';
@@ -114,7 +126,7 @@ module.exports = {
           });
 
       })
-      .fail( function(error) {
+      .fail( function( error ) {
         console.log('aes key is not exist ', error );
         res.code = '600';
         res.msg = '해당 전화의 사용자 정보가 없습니다.';
