@@ -9,40 +9,37 @@ var updateUser= Q.nbind( User.update, User );
 
 function handleEmail( email, password, code, msg, res ) {
 
-  var smtpTransport = nodemailer.createTransport("SMTP", {  
-    // host: 'smtp.gmail.com',
-    // port: 465,
-    // secure: true,
-    service: 'Gmail',
+  var smtpTransport = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
     auth: {
       type: 'OAuth2',
       user: 'lfin.devops@gmail.com',
       pass: '!@#$1q2w3e4r%T'
     }
-
   });
 
-  var mailOptions = {  
-    from: 'lfin_admin <lfin.devops@gmail.com>',
-    to: email,
-    subject: 'LFin_비밀번호 전송',
-    text: '비밀번호 = ' + password
-  };
-
-  smtpTransport.sendMail( mailOptions, function( error, response ) {
-
-    if( error ) {
-      console.log( error );
-    } 
-    else {
-      console.log( "Message sent : " + response.message );
+  smtpTransport.set('oauth2_provision_cb', ( user, renew, callback ) => {
+    let accessToken = userTokens[user];
+    if( !accessToken ) {
+      return callback( new Error('Unknown user') );
     }
-
-    smtpTransport.close();
-
+    else {
+      return callback( null, accessToken );
+    }
   });
 
-          
+  smtpTransport.sendMail({
+    from: 'lfin.devops@gmail.com',
+    to: email,
+    subject: 'Message for Lfin password',
+    text: 'The password you requested is = ' + password,
+    auth: {
+      user: 'lfin.devops@gmail.com'
+    }
+  });
+        
   console.log( msg );
 
   var ret = {};
