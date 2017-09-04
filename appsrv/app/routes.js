@@ -29,6 +29,8 @@ module.exports = function(app) {
 	app.post('/signin', signController.signin );
 	app.post('/signup', signController.signup );
 	app.post('/updateSign', signController.updateSign );
+	app.post('/updateNumber', signController.updateNumber );
+	app.post('/updatePassword', signController.updatePassword );
 
 	app.post('/testaes', codeController.testaes );
 
