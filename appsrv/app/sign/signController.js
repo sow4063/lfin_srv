@@ -1,6 +1,7 @@
 var Q = require('q');
 var User = require('./signModel.js');
 var nodemailer = require('nodemailer');
+var smtpPool = require('nodemailer-smtp-pool');
 
 // Promisify a few mongoose methods with the `q` promise library
 var findUser = Q.nbind( User.findOne, User );
@@ -9,45 +10,59 @@ var updateUser= Q.nbind( User.update, User );
 
 function handleEmail( email, password, code, msg, res ) {
 
-  var smtpTransport = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
+  var sender = 'lfin_admin < lfin.devops@gmail.com >';
+  var receiver = email;
+  var mailTitle = 'Message for Lfin password';
+  var html = '<h3>' + password + '</h3>';
+
+  var mailOptions = {
+    from: sender,
+    to: receiver,
+    subject: mailTitle,
+    html: html
+  };
+
+  var transporter = nodemailer.createTransport( smtpPool( {
+    service: "Gmail",
+    host: "localhost",
+    port: "465",
     auth: {
-      type: 'OAuth2',
       user: 'lfin.devops@gmail.com',
       pass: '!@#$1q2w3e4r%T'
-    }
-  });
+    },
+    tls: {
+      rejectUnauthorize: false
+    },
+    maxConnections: 5,
+    maxMessages: 10
+  }));
 
-  smtpTransport.set('oauth2_provision_cb', ( user, renew, callback ) => {
-    let accessToken = userTokens[user];
-    if( !accessToken ) {
-      return callback( new Error('Unknown user') );
-    }
+  transporter.sendMail( mailOptions, function ( err, response ) {
+    
+    if( err ) {
+      
+      console.log('failed sendding email... => ' + err );
+      
+      var ret = {};
+      ret.code = 863;
+      ret.msg = err; 
+
+      res.json( ret );
+    } 
     else {
-      return callback( null, accessToken );
-    }
-  });
+      console.log('succeed sending email... => ' + response );
+      
+      var ret = {};
+      ret.code = code;
+      ret.msg = response; 
 
-  smtpTransport.sendMail({
-    from: 'lfin.devops@gmail.com',
-    to: email,
-    subject: 'Message for Lfin password',
-    text: 'The password you requested is = ' + password,
-    auth: {
-      user: 'lfin.devops@gmail.com'
+      res.json( ret );
     }
+
+    transporter.close();
+  
   });
         
-  console.log( msg );
-
-  var ret = {};
-  ret.code = code;
-  ret.msg = msg; 
-
-  res.json( ret );
-
 };
 
 function handleResult( code, msg, res ) {
