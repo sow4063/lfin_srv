@@ -31,6 +31,7 @@ module.exports = function(app) {
 	app.post('/updateSign', signController.updateSign );
 	app.post('/updateNumber', signController.updateNumber );
 	app.post('/updatePassword', signController.updatePassword );
+	app.post('/confirmPassword', signController.confirmPassword );
 
 	app.post('/testaes', codeController.testaes );
 
