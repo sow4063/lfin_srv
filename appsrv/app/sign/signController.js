@@ -39,31 +39,32 @@ function handleEmail( email, password, code, msg, res ) {
 
   transporter.sendMail( mailOptions, function ( err, response ) {
     
+    var ret = {};
+
     if( err ) {
       
       console.log('failed sendding email... => ' + err );
       
-      var ret = {};
       ret.code = 863;
       ret.msg = err; 
 
       res.json( ret );
     } 
     else {
+      
       console.log('succeed sending email... => ' + response );
       
-      var ret = {};
       ret.code = code;
-      ret.msg = response; 
+      ret.msg = msg; 
 
       res.json( ret );
     }
 
     transporter.close();
   
-  });
+  }); // sendMail
         
-};
+}; // handleEmail
 
 function handleResult( code, msg, res ) {
           
