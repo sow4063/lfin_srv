@@ -10,11 +10,16 @@ var updateUser= Q.nbind( User.update, User );
 function handleEmail( email, password, code, msg, res ) {
 
   var smtpTransport = nodemailer.createTransport("SMTP", {  
+    // host: 'smtp.gmail.com',
+    // port: 465,
+    // secure: true,
     service: 'Gmail',
     auth: {
-        user: 'lfin.devops',
-        pass: '!@#$1q2w3e4r%T'
+      type: 'OAuth2',
+      user: 'lfin.devops@gmail.com',
+      pass: '!@#$1q2w3e4r%T'
     }
+
   });
 
   var mailOptions = {  
