@@ -121,7 +121,7 @@ module.exports = {
       .then( function( user ) {
         if( user ) {
           if( user.password !== newPassword ) {
-            return updateUser( {'password': newNumber, 'email': email } )
+            return updateUser( {'password': newPassword, 'email': email } )
             .then( function( modifiedUser ) {
               console.log('modifiedUser => ', modifiedUser );
               handleResult( 810, '사용자 정보를 수정했습니다.', res );
