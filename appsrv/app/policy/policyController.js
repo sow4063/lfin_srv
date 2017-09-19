@@ -63,10 +63,10 @@ module.exports = {
 
     var policy = {};
 
-    policy['version'] = req.query.ver;
-    policy['keyChange'] = req.query.keyChange;
-    policy['appChange'] = req.query.appChange;
-    policy['note'] = req.query.note;
+    policy['version'] = req.body.ver;
+    policy['keyChange'] = req.body.keyChange;
+    policy['appChange'] = req.body.appChange;
+    policy['note'] = req.body.note;
 
     var now = new Date();
     var jsonDate = now.toJSON().substring(0, 10).replace(/[\-]/g, '');
@@ -93,6 +93,8 @@ module.exports = {
   },
 
   searchPolicy: function (req, res, next) {
+
+    console.log('searchPolicy' );
 
     findPolicy.find( {}, {}, { sort:{ updateDate: -1}, limit:1 }, function( err, data ) {
       if( err ) {
