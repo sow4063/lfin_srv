@@ -108,7 +108,7 @@ module.exports = {
     ret.code = 0;
     ret.msg = '정책을 정상적으로 검색했습니다.'; 
 
-    findPolicy.find( {}, {}, { sort:{ updateDate: -1}, limit:1 }, function( err, data ) {
+    Policy.find( {}, {}, { sort:{ updateDate: -1}, limit:1 }, function( err, data ) {
       if( err ) {
         console.log('searchPolicy error = ', err );
 
