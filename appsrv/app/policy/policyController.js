@@ -77,6 +77,10 @@ module.exports = {
 
     console.log('insertPolicy input = ', policy );
 
+    var ret = {};
+    ret.code = 0;
+    ret.msg = '정책이 정상적으로 등록됐습니다.'; 
+
     createPolicy( policy )
       .then( function( result ) {
         console.log('createPolicy result =  ', result );
@@ -84,11 +88,15 @@ module.exports = {
         // send policy to the pwserver
         sendPolicy( policy );
 
-        res.json( result );
+        res.json( ret );
       })
       .fail( function( error ){
         console.log('createPolicy fail : ', error );
-        res.json( error );
+
+        ret.msg = '정책 등록에 실패했습니다.';
+        ret.code = '900';
+
+        res.json( ret );
       });
   },
 
@@ -96,12 +104,23 @@ module.exports = {
 
     console.log('searchPolicy' );
 
+    var ret = {};
+    ret.code = 0;
+    ret.msg = '정책을 정상적으로 검색했습니다.'; 
+
     findPolicy.find( {}, {}, { sort:{ updateDate: -1}, limit:1 }, function( err, data ) {
       if( err ) {
         console.log('searchPolicy error = ', err );
+
+        ret.code = 910;
+        ret.msg = '정책 검색에 실패했습니다.';
+      }
+      else {
+        console.log('searchPolicy result = ', data );
+        ret.val = data;
       }
 
-      res.json( { policy: data } );
+      res.json( ret );
     });
   }
 

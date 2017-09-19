@@ -14,14 +14,14 @@ module.exports = function(app) {
 	console.log('result of makeRSAKey', result );
 
   app.get('/appkey', appKeyController.getAppkey );
-  app.get('/policy', policyController.searchPolicy );
-
+  
   app.post('/code', codeController.getCode );
   app.post('/updateCodes', codeController.updateCodes );
   app.post('/aes', appKeyController.getAESKey );
   //app.post('/aes', appKeyController.getAES );
   app.post('/rsa', appKeyController.insertRSAKey );
-	
+
+	app.post('/policy', policyController.searchPolicy );
 	app.post('/insertPolicy', policyController.insertPolicy );
 	app.post('/insertCode', codeController.insertCode );
 
