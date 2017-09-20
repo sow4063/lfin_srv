@@ -280,8 +280,13 @@ module.exports = {
     var mobileNumber = req.body.mobileNumber;
 
     if( !mobileNumber || !rsakey ) {
+
+      let message = 'mobileNumber or rsakey is undefined.';
+
+      console.log( let );
+
       ret.code = 122;
-      ret.msg = 'mobileNumber or rsakey is undefined.';
+      ret.msg = message;
       res.json( ret );  
       return;
     }
@@ -294,7 +299,7 @@ module.exports = {
 
     console.log('key info = ', keyinf );
 
-    removeKey( keyinf.mobileNumber )
+    removeKey( {'mobileNumber': keyinf.mobileNumber} )
       .then( function( result ) {
         createKey( keyinf )
           .then( function( result ) {
