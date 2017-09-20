@@ -281,7 +281,7 @@ module.exports = {
 
     if( !mobileNumber || !rsakey ) {
 
-      let message = 'mobileNumber or rsakey is undefined.';
+      var message = 'mobileNumber or rsakey is undefined.';
 
       console.log( let );
 
