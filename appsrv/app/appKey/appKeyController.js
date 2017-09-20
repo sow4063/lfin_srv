@@ -283,7 +283,7 @@ module.exports = {
 
       var message = 'mobileNumber or rsakey is undefined.';
 
-      console.log( let );
+      console.log( message );
 
       ret.code = 122;
       ret.msg = message;
