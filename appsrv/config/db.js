@@ -1,3 +1,4 @@
+// add comment for test
 var mongoose = require('mongoose');
 var url = 'mongodb://localhost/lpwapp';
 

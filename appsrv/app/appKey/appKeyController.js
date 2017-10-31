@@ -262,8 +262,8 @@ module.exports = {
         return result;
       })
       .fail( function( err ) {
-        console.log('Fail on create the RSA key for appserver :: ', error );
-        return error;
+        console.log('Fail on create the RSA key for appserver :: ', err );
+        return err;
       });
 
   },
